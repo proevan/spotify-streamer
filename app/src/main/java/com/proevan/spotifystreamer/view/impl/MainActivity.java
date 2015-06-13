@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
+import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
 import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
-import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
-import com.proevan.spotifystreamer.view.MainView;
+import com.proevan.spotifystreamer.view.MainPageView;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainPageView {
 
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainPresenterComponent.Initializer.init(this).inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         initRecyclerView();
-        mPresenter = new MainPresenterImpl(this);
     }
 
     private void initRecyclerView() {

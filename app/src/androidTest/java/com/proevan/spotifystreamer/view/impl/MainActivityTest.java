@@ -6,8 +6,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.content.ContextCompat;
 
 import com.proevan.spotifystreamer.R;
-import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
-import com.proevan.spotifystreamer.di.uitestcase.activity.ArtistSearchResultActivityTestCase;
+import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
+import com.proevan.spotifystreamer.di.uitestcase.activity.MainActivityTestCase;
 import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
 
 import org.mockito.Matchers;
@@ -37,13 +37,13 @@ import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
 import static org.hamcrest.Matchers.allOf;
 import static org.mockito.Mockito.doAnswer;
 
-public class ArtistSearchResultActivityTest extends ArtistSearchResultActivityTestCase {
+public class MainActivityTest extends MainActivityTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        SpotifyServiceComponent.Initializer.recreate().inject(this);
-        stubColdplaySearchResult();
         getActivity();
+        MainPresenterComponent.Initializer.instance.inject(this);
+        stubColdplaySearchResult();
     }
 
     // stub block start
@@ -132,6 +132,7 @@ public class ArtistSearchResultActivityTest extends ArtistSearchResultActivityTe
         // act
         searchAndWaitForResult("coldplay");
 
+        Thread.sleep(5000);
         // assert
         onView(allOf(withText("Coldplay"), withId(R.id.name)))
                 .check(matches(isDisplayed()));
