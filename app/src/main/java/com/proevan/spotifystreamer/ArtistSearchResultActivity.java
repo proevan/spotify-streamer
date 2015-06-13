@@ -8,8 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
-
 
 import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
 
@@ -21,12 +22,10 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnTextChanged;
-import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -35,9 +34,9 @@ import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 public class ArtistSearchResultActivity extends AppCompatActivity {
 
     public static final String TAG = "ArtistSearchResultActivity";
-    private static final int SEARCH_TYPING_DELAY = 500;
+    public static final int SEARCH_TYPING_DELAY = 500;
     private List<Artist> mArtists = new ArrayList<>();
-    private RecyclerView.Adapter mAdapter;
+    private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Handler mSearchHandler = new Handler();
     private Runnable mSearchHandlerCallback;
@@ -69,6 +68,12 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new ArtistListAdapter(this, mArtists);
+        mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
+                Log.e(TAG, "click: " + index);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
     }
 

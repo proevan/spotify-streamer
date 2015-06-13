@@ -21,7 +21,9 @@ import kaaes.spotify.webapi.android.models.Pager;
 import retrofit.Callback;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -108,12 +110,23 @@ public class ArtistListActivityTest extends ArtistSearchResultActivityTestCase {
                 .check(matches(isDisplayed()));
     }
 
-    public void testSearchColdplay() throws Exception {
+    public void testClearResultDuringTyping() throws Exception {
         // arrange
 
         // act
         onView(withId(R.id.search_bar))
                 .perform(typeText("coldplay"));
+
+        // assert
+        onView(allOf(withText("Coldplay"), withId(R.id.name)))
+                .check(doesNotExist());
+    }
+
+    public void testSearchColdplay() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult("coldplay");
 
         // assert
         onView(allOf(withText("Coldplay"), withId(R.id.name)))
@@ -126,12 +139,24 @@ public class ArtistListActivityTest extends ArtistSearchResultActivityTestCase {
                 .check(matches(isDisplayed()));
     }
 
+    public void testSearchColdplayThenClearText() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult("coldplay");
+        onView(withId(R.id.search_bar))
+                .perform(clearText());
+
+        // assert
+        onView(allOf(withText("Coldplay"), withId(R.id.name)))
+                .check(doesNotExist());
+    }
+
     public void testArtistItemImagePlaceHolder() throws Exception {
         // arrange
 
         // act
-        onView(withId(R.id.search_bar))
-                .perform(typeText("coldplay"));
+        searchAndWaitForResult("coldplay");
 
         // assert
         Drawable placeholderDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.spotify_placeholder);
@@ -139,4 +164,14 @@ public class ArtistListActivityTest extends ArtistSearchResultActivityTestCase {
                 .check(matches(isImageTheSame(placeholderDrawable)));
     }
     // test case block end
+
+    private void searchAndWaitForResult(String text) throws InterruptedException {
+        onView(withId(R.id.search_bar))
+                .perform(typeText(text));
+        waitForSearchTypingDelay();
+    }
+
+    private void waitForSearchTypingDelay() throws InterruptedException {
+        Thread.sleep(ArtistSearchResultActivity.SEARCH_TYPING_DELAY);
+    }
 }
