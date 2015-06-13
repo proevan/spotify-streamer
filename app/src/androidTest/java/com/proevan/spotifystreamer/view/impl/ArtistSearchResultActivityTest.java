@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
 import com.proevan.spotifystreamer.di.uitestcase.activity.ArtistSearchResultActivityTestCase;
-import com.proevan.spotifystreamer.presenter.impl.ArtistSearchResultPresenterImpl;
+import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
 
 import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
@@ -191,6 +191,6 @@ public class ArtistSearchResultActivityTest extends ArtistSearchResultActivityTe
     }
 
     private void waitForSearchTypingDelay() throws InterruptedException {
-        Thread.sleep(ArtistSearchResultPresenterImpl.SEARCH_TYPING_DELAY);
+        Thread.sleep(MainPresenterImpl.SEARCH_TYPING_DELAY);
     }
 }

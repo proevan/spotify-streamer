@@ -13,12 +13,14 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
-import com.proevan.spotifystreamer.presenter.ArtistSearchResultPresenter;
+import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
-import com.proevan.spotifystreamer.presenter.impl.ArtistSearchResultPresenterImpl;
-import com.proevan.spotifystreamer.view.ArtistSearchResultView;
+import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
+import com.proevan.spotifystreamer.view.MainView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -27,11 +29,13 @@ import kaaes.spotify.webapi.android.models.Artist;
 
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
-public class ArtistSearchResultActivity extends AppCompatActivity implements ArtistSearchResultView {
+public class MainActivity extends AppCompatActivity implements MainView {
 
-    private ArtistSearchResultPresenter mPresenter;
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    @Inject
+    MainPresenter mPresenter;
 
     @InjectView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -45,10 +49,10 @@ public class ArtistSearchResultActivity extends AppCompatActivity implements Art
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_artist_search_result);
+        setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         initRecyclerView();
-        mPresenter = new ArtistSearchResultPresenterImpl(this);
+        mPresenter = new MainPresenterImpl(this);
     }
 
     private void initRecyclerView() {
@@ -70,7 +74,7 @@ public class ArtistSearchResultActivity extends AppCompatActivity implements Art
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_artist_search_result, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -100,13 +104,13 @@ public class ArtistSearchResultActivity extends AppCompatActivity implements Art
 
     @Override
     public void openTracksPage(Bundle bundle) {
-        Intent intent = new Intent(this, ArtistSearchResultActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(ArtistSearchResultActivity.this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
-import com.proevan.spotifystreamer.presenter.ArtistSearchResultPresenter;
+import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.util.DelayActionFilter;
-import com.proevan.spotifystreamer.view.ArtistSearchResultView;
+import com.proevan.spotifystreamer.view.MainView;
 
 import javax.inject.Inject;
 
@@ -16,23 +16,23 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ArtistSearchResultPresenterImpl implements ArtistSearchResultPresenter {
+public class MainPresenterImpl implements MainPresenter {
 
     public static final int SEARCH_TYPING_DELAY = 500;
-    private ArtistSearchResultView mArtistSearchResultView;
+    private MainView mMainView;
     private DelayActionFilter mDelayActionFilter = new DelayActionFilter(SEARCH_TYPING_DELAY);
 
     @Inject
     SpotifyService mSpotifyService;
 
-    public ArtistSearchResultPresenterImpl(ArtistSearchResultView artistSearchResultView) {
+    public MainPresenterImpl(MainView mainView) {
         SpotifyServiceComponent.Initializer.init().inject(this);
-        mArtistSearchResultView = artistSearchResultView;
+        mMainView = mainView;
     }
 
     @Override
     public void onSearchTextChange(final CharSequence text) {
-        mArtistSearchResultView.clearSearchResult();
+        mMainView.clearSearchResult();
         mDelayActionFilter.prepareToDoActionWithDelay(new DelayActionFilter.Callback() {
             @Override
             public void doAction() {
@@ -47,23 +47,23 @@ public class ArtistSearchResultPresenterImpl implements ArtistSearchResultPresen
                 @Override
                 public void success(ArtistsPager artistsPager, Response response) {
                     Logger.d("searchArtist success: " + name);
-                    mArtistSearchResultView.setResultItems(artistsPager.artists.items);
+                    mMainView.setResultItems(artistsPager.artists.items);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     Logger.e("searchArtist failure: " + error.getMessage());
-                    mArtistSearchResultView.showMessage("error: " + error.getLocalizedMessage());
+                    mMainView.showMessage("error: " + error.getLocalizedMessage());
                 }
             });
         } else {
-            mArtistSearchResultView.clearSearchResult();
+            mMainView.clearSearchResult();
         }
     }
 
     @Override
     public void onSearchResultItemClick(int position) {
         Bundle bundle = new Bundle();
-        mArtistSearchResultView.openTracksPage(bundle);
+        mMainView.openTracksPage(bundle);
     }
 }
