@@ -18,14 +18,12 @@ import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
 import com.proevan.spotifystreamer.presenter.impl.ArtistSearchResultPresenterImpl;
 import com.proevan.spotifystreamer.view.ArtistSearchResultView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnTextChanged;
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
 
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 

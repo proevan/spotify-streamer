@@ -71,9 +71,14 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
     private void loadArtistFirstImage(ImageView imageView, List<Image> images) {
         if (images.size() > 0) {
+            int imageLoadIndex;
+            if (images.size() == 2)
+                imageLoadIndex = 1;
+            else
+                imageLoadIndex = 0;
             imageView.setImageDrawable(null);
             Picasso.with(imageView.getContext())
-                    .load(images.get(0).url)
+                    .load(images.get(imageLoadIndex).url)
                     .fit().centerCrop()
                     .into(imageView);
         } else
