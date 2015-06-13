@@ -35,7 +35,7 @@ import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 public class ArtistSearchResultActivity extends AppCompatActivity {
 
     public static final String TAG = "ArtistSearchResultActivity";
-    private static final int SEARCH_DELAY = 500;
+    private static final int SEARCH_TYPING_DELAY = 500;
     private List<Artist> mArtists = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -88,7 +88,7 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
 
         mSearchHandler.postDelayed(
                 mSearchHandlerCallback,
-                SEARCH_DELAY);
+                SEARCH_TYPING_DELAY);
     }
 
     private void searchArtist(final String name) {
