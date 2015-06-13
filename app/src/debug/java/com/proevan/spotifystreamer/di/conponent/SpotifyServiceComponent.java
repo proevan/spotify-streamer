@@ -1,6 +1,7 @@
 package com.proevan.spotifystreamer.di.conponent;
 
-import com.proevan.spotifystreamer.ArtistSearchResultActivity;
+import com.proevan.spotifystreamer.presenter.impl.ArtistSearchResultPresenterImpl;
+import com.proevan.spotifystreamer.view.impl.ArtistSearchResultActivity;
 import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 import com.proevan.spotifystreamer.di.uitestcase.activity.ArtistSearchResultActivityTestCase;
 
@@ -12,7 +13,7 @@ import dagger.Component;
 @Component(modules = {SpotifyServiceModule.class})
 public interface SpotifyServiceComponent {
 
-    void inject(ArtistSearchResultActivity activity);
+    void inject(ArtistSearchResultPresenterImpl presenter);
 
     void inject(ArtistSearchResultActivityTestCase testCase);
 

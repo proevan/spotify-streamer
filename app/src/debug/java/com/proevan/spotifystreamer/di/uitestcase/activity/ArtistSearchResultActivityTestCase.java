@@ -2,7 +2,7 @@ package com.proevan.spotifystreamer.di.uitestcase.activity;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.proevan.spotifystreamer.ArtistSearchResultActivity;
+import com.proevan.spotifystreamer.view.impl.ArtistSearchResultActivity;
 
 import javax.inject.Inject;
 

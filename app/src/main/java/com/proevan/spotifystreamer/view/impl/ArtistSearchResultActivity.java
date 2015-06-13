@@ -1,70 +1,56 @@
-package com.proevan.spotifystreamer;
+package com.proevan.spotifystreamer.view.impl;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
-import com.proevan.spotifystreamer.util.DelayActionFilter;
+import com.orhanobut.logger.Logger;
+import com.proevan.spotifystreamer.R;
+import com.proevan.spotifystreamer.presenter.ArtistSearchResultPresenter;
+import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
+import com.proevan.spotifystreamer.presenter.impl.ArtistSearchResultPresenterImpl;
+import com.proevan.spotifystreamer.view.ArtistSearchResultView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnTextChanged;
-import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
-public class ArtistSearchResultActivity extends AppCompatActivity {
+public class ArtistSearchResultActivity extends AppCompatActivity implements ArtistSearchResultView {
 
-    public static final String TAG = "ArtistSearchResultActivity";
-    public static final int SEARCH_TYPING_DELAY = 500;
-    private List<Artist> mArtists = new ArrayList<>();
+    private ArtistSearchResultPresenter mPresenter;
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private DelayActionFilter mDelayActionFilter = new DelayActionFilter(SEARCH_TYPING_DELAY);
-
-    @Inject
-    SpotifyService mSpotifyService;
 
     @InjectView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
     @OnTextChanged(value = R.id.search_bar, callback = AFTER_TEXT_CHANGED)
     void onSearchTextChange(final CharSequence text) {
-        clearSearchResult();
-        mDelayActionFilter.prepareToDoActionWithDelay(new DelayActionFilter.Callback() {
-            @Override
-            public void doAction() {
-                searchArtist(text.toString());
-            }
-        });
+        Logger.v("onSearchTextChange: " + text);
+        mPresenter.onSearchTextChange(text);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SpotifyServiceComponent.Initializer.init().inject(this);
         setContentView(R.layout.activity_artist_search_result);
         ButterKnife.inject(this);
         initRecyclerView();
+        mPresenter = new ArtistSearchResultPresenterImpl(this);
     }
 
     private void initRecyclerView() {
@@ -72,45 +58,15 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new ArtistListAdapter(this, mArtists);
+        mAdapter = new ArtistListAdapter();
         mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
-                Log.d(TAG, "mAdapter onItemClick: " + index);
+                Logger.v("mAdapter onItemClick: " + index);
+                mPresenter.onSearchResultItemClick(index);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    private void searchArtist(final String name) {
-        if (name.length() > 0) {
-            mSpotifyService.searchArtists(name, new Callback<ArtistsPager>() {
-                @Override
-                public void success(ArtistsPager artistsPager, Response response) {
-                    Log.d(TAG, "searchArtist success: " + name);
-                    setResultData(artistsPager);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e(TAG, "searchArtist failure: " + error.getMessage());
-                    Toast.makeText(getApplicationContext(), "error: " + error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            clearSearchResult();
-        }
-    }
-
-    private void setResultData(ArtistsPager artistsPager) {
-        mArtists.clear();
-        mArtists.addAll(artistsPager.artists.items);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void clearSearchResult() {
-        mArtists.clear();
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -133,5 +89,26 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setResultItems(List<Artist> artists) {
+        mAdapter.removeAll();
+        mAdapter.addAll(artists);
+    }
+
+    public void clearSearchResult() {
+        mAdapter.removeAll();
+    }
+
+    @Override
+    public void openTracksPage(Bundle bundle) {
+        Intent intent = new Intent(this, ArtistSearchResultActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(ArtistSearchResultActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

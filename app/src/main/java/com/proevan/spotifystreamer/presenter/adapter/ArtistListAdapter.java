@@ -1,6 +1,5 @@
-package com.proevan.spotifystreamer;
+package com.proevan.spotifystreamer.presenter.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,10 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.proevan.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -20,13 +21,79 @@ import kaaes.spotify.webapi.android.models.Image;
 
 public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> {
 
-    private Context mContext;
-    private List<Artist> mArtists;
+    private List<Artist> mItems;
     private AdapterView.OnItemClickListener mOnItemClickListener;
 
-    public ArtistListAdapter(Context context, List<Artist> artists) {
-        mContext = context;
-        mArtists = artists;
+    public ArtistListAdapter() {
+        mItems = new ArrayList<>();
+    }
+
+    public void removeAll() {
+        mItems.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Artist> items) {
+        mItems.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(int position, Artist item) {
+        if (position > mItems.size()) return;
+
+        mItems.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void removeItem(int position) {
+        if (position >= mItems.size()) return;
+
+        mItems.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public ArtistListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                   int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.artist_list_item, parent, false);
+        ViewHolder vh = new ViewHolder(v, this);
+
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Artist artist = mItems.get(position);
+        holder.nameTextView.setText(artist.name);
+        loadArtistFirstImage(holder.imageView, artist.images);
+    }
+
+    private void loadArtistFirstImage(ImageView imageView, List<Image> images) {
+        if (images.size() > 0) {
+            imageView.setImageDrawable(null);
+            Picasso.with(imageView.getContext())
+                    .load(images.get(0).url)
+                    .fit().centerCrop()
+                    .into(imageView);
+        } else
+            imageView.setImageResource(R.drawable.spotify_placeholder);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mItems.size();
+    }
+
+    private void onItemHolderClick(ViewHolder viewHolder) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(null, viewHolder.itemView,
+                    viewHolder.getAdapterPosition(), viewHolder.getItemId());
+        }
+    }
+
+    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -48,49 +115,5 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         public void onClick(View view) {
             mAdapter.onItemHolderClick(this);
         }
-    }
-
-    @Override
-    public ArtistListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.artist_list_item, parent, false);
-        ViewHolder vh = new ViewHolder(v, this);
-
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Artist artist = mArtists.get(position);
-        holder.nameTextView.setText(artist.name);
-        loadArtistFirstImage(holder.imageView, artist.images);
-    }
-
-    private void loadArtistFirstImage(ImageView imageView, List<Image> images) {
-        if (images.size() > 0) {
-            imageView.setImageDrawable(null);
-            Picasso.with(mContext)
-                    .load(images.get(0).url)
-                    .fit().centerCrop()
-                    .into(imageView);
-        } else
-            imageView.setImageResource(R.drawable.spotify_placeholder);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mArtists.size();
-    }
-
-    private void onItemHolderClick(ViewHolder viewHolder) {
-        if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(null, viewHolder.itemView,
-                    viewHolder.getAdapterPosition(), viewHolder.getItemId());
-        }
-    }
-
-    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
     }
 }

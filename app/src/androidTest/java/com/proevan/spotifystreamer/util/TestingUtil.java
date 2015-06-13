@@ -1,4 +1,4 @@
-package com.proevan.spotifystreamer.testingutil;
+package com.proevan.spotifystreamer.util;
 
 import android.app.Activity;
 import android.widget.Toast;

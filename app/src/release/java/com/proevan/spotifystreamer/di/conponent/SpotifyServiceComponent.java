@@ -1,6 +1,6 @@
 package com.proevan.spotifystreamer.di.conponent;
 
-import com.proevan.spotifystreamer.ArtistSearchResultActivity;
+import com.proevan.spotifystreamer.view.impl.ArtistSearchResultActivity;
 import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 
 import javax.inject.Singleton;

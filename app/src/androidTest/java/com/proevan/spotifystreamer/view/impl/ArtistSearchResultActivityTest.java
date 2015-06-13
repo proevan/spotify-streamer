@@ -1,11 +1,14 @@
-package com.proevan.spotifystreamer;
+package com.proevan.spotifystreamer.view.impl;
 
 
 import android.graphics.drawable.Drawable;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.content.ContextCompat;
 
+import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
 import com.proevan.spotifystreamer.di.uitestcase.activity.ArtistSearchResultActivityTestCase;
+import com.proevan.spotifystreamer.presenter.impl.ArtistSearchResultPresenterImpl;
 
 import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
@@ -30,7 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.proevan.spotifystreamer.testingutil.CustomMatcher.isImageTheSame;
+import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
 import static org.hamcrest.Matchers.allOf;
 import static org.mockito.Mockito.doAnswer;
 
@@ -97,7 +100,7 @@ public class ArtistSearchResultActivityTest extends ArtistSearchResultActivityTe
         // act
 
         // assert
-        onView(withText(R.string.app_name))
+        onView(ViewMatchers.withText(R.string.app_name))
                 .check(matches(isDisplayed()));
     }
 
@@ -188,6 +191,6 @@ public class ArtistSearchResultActivityTest extends ArtistSearchResultActivityTe
     }
 
     private void waitForSearchTypingDelay() throws InterruptedException {
-        Thread.sleep(ArtistSearchResultActivity.SEARCH_TYPING_DELAY);
+        Thread.sleep(ArtistSearchResultPresenterImpl.SEARCH_TYPING_DELAY);
     }
 }
