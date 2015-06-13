@@ -1,9 +1,25 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.proevan.spotifystreamer"
         minSdkVersion 14
@@ -13,13 +29,31 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file('release.keystore')
+            storePassword "android"
+            keyAlias "androidnanodegree"
+            keyPassword "android"
+        }
+    }
+
     packagingOptions {
         exclude 'LICENSE.txt'
     }
 
     buildTypes {
         release {
+            debuggable true
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+            applicationIdSuffix ".debug"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,9 +62,19 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.jakewharton:butterknife:6.1.0'
-
+    compile(name: 'spotify-web-api-android-0.1.0', ext: 'aar')
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.dagger:dagger:2.0'
+    apt 'com.google.dagger:dagger-compiler:2.0'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
     // For testing
+    debugCompile 'org.mockito:mockito-core:1.10.19'
+    debugCompile 'com.google.dexmaker:dexmaker:1.2'
+    debugCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     //Espresso 2
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
     androidTestCompile 'com.android.support.test:runner:0.3'
