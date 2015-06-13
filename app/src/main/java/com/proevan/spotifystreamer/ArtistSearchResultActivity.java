@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.proevan.spotifystreamer.di.conponent.SpotifyServiceComponent;
+import com.proevan.spotifystreamer.util.DelayActionFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,7 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
     private List<Artist> mArtists = new ArrayList<>();
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Handler mSearchHandler = new Handler();
-    private Runnable mSearchHandlerCallback;
+    private DelayActionFilter mDelayActionFilter = new DelayActionFilter(SEARCH_TYPING_DELAY);
 
     @Inject
     SpotifyService mSpotifyService;
@@ -48,9 +48,14 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
 
     @OnTextChanged(value = R.id.search_bar, callback = AFTER_TEXT_CHANGED)
-    void onSearchTextChange(CharSequence text) {
+    void onSearchTextChange(final CharSequence text) {
         clearSearchResult();
-        prepareToSearchWithDelay(text.toString());
+        mDelayActionFilter.prepareToDoActionWithDelay(new DelayActionFilter.Callback() {
+            @Override
+            public void doAction() {
+                searchArtist(text.toString());
+            }
+        });
     }
 
     @Override
@@ -75,25 +80,6 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    private void prepareToSearchWithDelay(final String searchString) {
-        if (mSearchHandlerCallback != null)
-            mSearchHandler.removeCallbacks(mSearchHandlerCallback);
-        mSearchHandlerCallback = new Runnable() {
-            @Override
-            public void run() {
-                mSearchHandler.removeCallbacks(mSearchHandlerCallback);
-                if (mSearchHandlerCallback != null) {
-                    mSearchHandlerCallback = null;
-                    searchArtist(searchString);
-                }
-            }
-        };
-
-        mSearchHandler.postDelayed(
-                mSearchHandlerCallback,
-                SEARCH_TYPING_DELAY);
     }
 
     private void searchArtist(final String name) {
