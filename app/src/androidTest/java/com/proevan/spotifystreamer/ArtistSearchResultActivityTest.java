@@ -34,7 +34,7 @@ import static com.proevan.spotifystreamer.testingutil.CustomMatcher.isImageTheSa
 import static org.hamcrest.Matchers.allOf;
 import static org.mockito.Mockito.doAnswer;
 
-public class ArtistListActivityTest extends ArtistSearchResultActivityTestCase {
+public class ArtistSearchResultActivityTest extends ArtistSearchResultActivityTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
