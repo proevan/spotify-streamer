@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SpotifyStreamer</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="action_bar_title_main_activity">Spotify Streamer</string>
     <string name="action_settings">Settings</string>
 </resources>
