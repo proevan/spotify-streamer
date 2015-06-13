@@ -1,4 +1,4 @@
-package com.proevan.spotifystreamer.view.impl;
+package com.proevan.spotifystreamer.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

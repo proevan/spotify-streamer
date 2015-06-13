@@ -2,7 +2,7 @@ package com.proevan.spotifystreamer.di.conponent;
 
 import com.proevan.spotifystreamer.di.module.MainPresenterModule;
 import com.proevan.spotifystreamer.view.MainPageView;
-import com.proevan.spotifystreamer.view.impl.MainActivity;
+import com.proevan.spotifystreamer.view.activity.MainActivity;
 
 import javax.inject.Singleton;
 
