@@ -57,7 +57,7 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SpotifyServiceComponent.Initializer.init().inject(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_artist_search_result);
         ButterKnife.inject(this);
         initRecyclerView();
     }
@@ -71,7 +71,7 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
-                Log.e(TAG, "click: " + index);
+                Log.d(TAG, "mAdapter onItemClick: " + index);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -130,7 +130,7 @@ public class ArtistSearchResultActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_artist_search_result, menu);
         return true;
     }
 
