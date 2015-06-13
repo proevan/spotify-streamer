@@ -10,8 +10,7 @@
         android:id="@+id/image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:scaleType="centerInside"
-        tools:src="@android:color/holo_red_light"/>
+        tools:src="@drawable/spotify_placeholder"/>
 
     <TextView
         android:id="@+id/name"

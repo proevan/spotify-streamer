@@ -72,6 +72,7 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
             imageView.setImageDrawable(null);
             Picasso.with(mContext)
                     .load(images.get(0).url)
+                    .fit().centerCrop()
                     .into(imageView);
         } else
             imageView.setImageResource(R.drawable.spotify_placeholder);
