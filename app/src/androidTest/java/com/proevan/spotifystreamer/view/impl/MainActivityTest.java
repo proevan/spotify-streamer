@@ -132,7 +132,6 @@ public class MainActivityTest extends MainActivityTestCase {
         // act
         searchAndWaitForResult("coldplay");
 
-        Thread.sleep(5000);
         // assert
         onView(allOf(withText("Coldplay"), withId(R.id.name)))
                 .check(matches(isDisplayed()));
