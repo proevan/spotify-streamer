@@ -22,6 +22,7 @@ import retrofit.Callback;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -162,6 +163,21 @@ public class ArtistListActivityTest extends ArtistSearchResultActivityTestCase {
         Drawable placeholderDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.spotify_placeholder);
         onView(allOf(hasSibling(withText("Coldplay & Lele")), withId(R.id.image)))
                 .check(matches(isImageTheSame(placeholderDrawable)));
+    }
+
+    public void testArtistItemClick() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult("coldplay");
+        onView(allOf(withText("Coldplay"), withId(R.id.name)))
+                .perform(click());
+
+        // assert
+        onView(withText(getActivity().getString(R.string.top_10_tracks)))
+                .check(matches(isDisplayed()));
+        onView(withText("Coldplay"))
+                .check(matches(isDisplayed()));
     }
     // test case block end
 
