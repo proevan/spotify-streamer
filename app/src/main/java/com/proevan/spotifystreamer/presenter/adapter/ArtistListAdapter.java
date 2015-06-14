@@ -28,6 +28,10 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         mItems = new ArrayList<>();
     }
 
+    public Artist getItem(int position) {
+        return mItems.get(position);
+    }
+
     public void removeAll() {
         mItems.clear();
         notifyDataSetChanged();

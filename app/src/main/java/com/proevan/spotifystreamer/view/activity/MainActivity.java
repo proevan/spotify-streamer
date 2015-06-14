@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
                 Logger.v("mAdapter onItemClick: " + index);
-                mPresenter.onSearchResultItemClick(index);
+                mPresenter.onSearchResultItemClick(mAdapter, index);
             }
         });
         mRecyclerView.setAdapter(mAdapter);

@@ -33,9 +33,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
@@ -185,7 +185,7 @@ public class MainActivityTest extends MainActivityTestCase {
                 .perform(actionOnItemAtPosition(0, click()));
 
         // assert
-        onView(withText(getActivity().getString(R.string.top_10_tracks)))
+        onView(withText(getActivity().getString(R.string.title_activity_tracks)))
                 .check(matches(isDisplayed()));
         onView(withText("Coldplay"))
                 .check(matches(isDisplayed()));
@@ -196,14 +196,14 @@ public class MainActivityTest extends MainActivityTestCase {
 
         // act
         searchAndWaitForResult("coldplay");
-        Matcher<View> lastFakeItem = hasDescendant(withText("Princess of China (In The Style of Coldplay& Rihan"));
+        Matcher<View> lastFakeItem = withChild(withText("Princess of China (In The Style of Coldplay& Rihan"));
         onView(withId(R.id.recycler_view))
                 .perform(scrollTo(lastFakeItem));
         onView(lastFakeItem)
                 .perform(click());
 
         // assert
-        onView(withText(getActivity().getString(R.string.top_10_tracks)))
+        onView(withText(getActivity().getString(R.string.title_activity_tracks)))
                 .check(matches(isDisplayed()));
         onView(withText("Princess of China (In The Style of Coldplay& Rihan"))
                 .check(matches(isDisplayed()));
