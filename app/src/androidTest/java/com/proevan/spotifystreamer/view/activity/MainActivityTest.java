@@ -2,14 +2,17 @@ package com.proevan.spotifystreamer.view.activity;
 
 
 import android.graphics.drawable.Drawable;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
 import com.proevan.spotifystreamer.di.uitestcase.activity.MainActivityTestCase;
 import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
 
+import org.hamcrest.Matcher;
 import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -29,8 +32,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
@@ -74,6 +80,9 @@ public class MainActivityTest extends MainActivityTestCase {
         artists.add(generateFakeArtistWithOneImage("Various Artists - Coldplay Tribute", null));
         artists.add(generateFakeArtistWithOneImage("Karaoke - Coldplay", null));
         artists.add(generateFakeArtistWithOneImage("ColdPlay Wu", "https://i.scdn.co/image/d29c1e0ea74efccf7ec2634b5c2d2bc42f522a21"));
+        artists.add(generateFakeArtistWithOneImage("Coldplay Metal Tribute", null));
+        artists.add(generateFakeArtistWithOneImage("Éxito De Coldplay", null));
+        artists.add(generateFakeArtistWithOneImage("Princess of China (In The Style of Coldplay& Rihan", null));
 
         return artists;
     }
@@ -168,18 +177,36 @@ public class MainActivityTest extends MainActivityTestCase {
                 .check(matches(isImageTheSame(placeholderDrawable)));
     }
 
-    public void testArtistItemClick() throws Exception {
+    public void testFirstArtistItemClick() throws Exception {
         // arrange
 
         // act
         searchAndWaitForResult("coldplay");
-        onView(allOf(withText("Coldplay"), withId(R.id.name)))
-                .perform(click());
+        onView(withId(R.id.recycler_view))
+                .perform(actionOnItemAtPosition(0, click()));
 
         // assert
         onView(withText(getActivity().getString(R.string.top_10_tracks)))
                 .check(matches(isDisplayed()));
         onView(withText("Coldplay"))
+                .check(matches(isDisplayed()));
+    }
+
+    public void testLastArtistItemClick() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult("coldplay");
+        Matcher<View> lastItem = withChild(allOf(withText("Princess of China (In The Style of Coldplay& Rihan"), withId(R.id.name)));
+        onView(withId(R.id.recycler_view))
+                .perform(scrollTo(lastItem));
+        onView(lastItem)
+                .perform(click());
+
+        // assert
+        onView(withText(getActivity().getString(R.string.top_10_tracks)))
+                .check(matches(isDisplayed()));
+        onView(withText("Princess of China (In The Style of Coldplay& Rihan"))
                 .check(matches(isDisplayed()));
     }
     // test case block end
