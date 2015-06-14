@@ -34,6 +34,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
@@ -197,10 +198,10 @@ public class MainActivityTest extends MainActivityTestCase {
 
         // act
         searchAndWaitForResult("coldplay");
-        Matcher<View> lastItem = withChild(allOf(withText("Princess of China (In The Style of Coldplay& Rihan"), withId(R.id.name)));
+        Matcher<View> lastFakeItem = hasDescendant(withText("Princess of China (In The Style of Coldplay& Rihan"));
         onView(withId(R.id.recycler_view))
-                .perform(scrollTo(lastItem));
-        onView(lastItem)
+                .perform(scrollTo(lastFakeItem));
+        onView(lastFakeItem)
                 .perform(click());
 
         // assert
