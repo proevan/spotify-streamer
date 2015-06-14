@@ -9,6 +9,8 @@ import com.proevan.spotifystreamer.view.MainPageView;
 
 import javax.inject.Inject;
 
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.Callback;
@@ -41,7 +43,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     public void searchArtist(final String name) {
         if (name.length() > 0) {
-            mSpotifyService.searchArtists(name, new Callback<ArtistsPager>() {
+            mSpotifyService.searchArtists(name, new SpotifyCallback<ArtistsPager>() {
                 @Override
                 public void success(ArtistsPager artistsPager, Response response) {
                     Logger.d("searchArtist success: " + name);
@@ -49,9 +51,9 @@ public class MainPresenterImpl implements MainPresenter {
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
-                    Logger.e("searchArtist failure: " + error.getMessage());
-                    mMainPageView.showMessage("error: " + error.getLocalizedMessage());
+                public void failure(SpotifyError spotifyError) {
+                    Logger.e("searchArtist failure: " + spotifyError.getMessage());
+                    mMainPageView.showMessage("error: " + spotifyError.getLocalizedMessage());
                 }
             });
         } else {

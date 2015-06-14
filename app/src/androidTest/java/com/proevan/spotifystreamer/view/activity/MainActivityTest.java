@@ -2,7 +2,6 @@ package com.proevan.spotifystreamer.view.activity;
 
 
 import android.graphics.drawable.Drawable;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -20,11 +19,11 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Pager;
-import retrofit.Callback;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -37,7 +36,6 @@ import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
@@ -58,11 +56,11 @@ public class MainActivityTest extends MainActivityTestCase {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Callback<ArtistsPager> callback = (Callback<ArtistsPager>)invocationOnMock.getArguments()[1];
+                SpotifyCallback<ArtistsPager> callback = (SpotifyCallback<ArtistsPager>)invocationOnMock.getArguments()[1];
                 callback.success(generateFakeColdplaySearchResultArtistPager(), null);
                 return null;
             }
-        }).when(mMockSpotifyService).searchArtists(Matchers.matches("coldplay"), Matchers.<Callback<ArtistsPager>>any());
+        }).when(mMockSpotifyService).searchArtists(Matchers.matches("coldplay"), Matchers.<SpotifyCallback<ArtistsPager>>any());
     }
 
     private ArtistsPager generateFakeColdplaySearchResultArtistPager() {

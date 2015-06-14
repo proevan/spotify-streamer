@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
 
     @Override
     public void openTracksPage(Bundle bundle) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, TracksActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

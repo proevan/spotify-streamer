@@ -19,6 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activity.TracksActivity"
+            android:label="@string/title_activity_tracks"
+            android:parentActivityName=".view.activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.proevan.spotifystreamer.view.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
