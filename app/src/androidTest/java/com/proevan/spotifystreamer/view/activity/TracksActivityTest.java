@@ -43,12 +43,14 @@ public class TracksActivityTest extends TracksActivityTestCase {
         setActivityIntent(generateFakeIntentWithBundle());
         getActivity();
         TracksPresenterComponent.Initializer.instance.inject(this);
+        getActivity().setTestMode(true);
     }
 
     private void setUpWithNoTrackResult() {
         setActivityIntent(generateFakeIntentWithBundleNoResult());
         getActivity();
         TracksPresenterComponent.Initializer.instance.inject(this);
+        getActivity().setTestMode(true);
     }
 
     private Intent generateFakeIntentWithBundle() {
