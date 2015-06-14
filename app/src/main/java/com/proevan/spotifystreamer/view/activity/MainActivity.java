@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
 
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private boolean mIsTestMode = false; // work arround for testing, prevent UI test stuck problem
+    private boolean mIsTestMode = false; // workaround for testing, prevent UI test stuck problem
 
     @Inject
     MainPresenter mPresenter;
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
