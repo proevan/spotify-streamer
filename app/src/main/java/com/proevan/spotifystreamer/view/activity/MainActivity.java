@@ -9,8 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
@@ -33,12 +35,19 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
 
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private boolean mIsTestMode = false; // work arround for testing, prevent UI test stuck problem
 
     @Inject
     MainPresenter mPresenter;
 
     @InjectView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+
+    @InjectView(R.id.no_result_text)
+    TextView mNoResultTextView;
+
+    @InjectView(R.id.progress_view)
+    ProgressBarCircularIndeterminate mProgressView;
 
     @OnTextChanged(value = R.id.search_bar, callback = AFTER_TEXT_CHANGED)
     void onSearchTextChange(final CharSequence text) {
@@ -52,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
         MainPresenterComponent.Initializer.init(this).inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
         initRecyclerView();
     }
 
@@ -112,5 +122,31 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
     @Override
     public void showMessage(String message) {
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNoDataMessage() {
+        mNoResultTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoDataMessage() {
+        mNoResultTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoadingView() {
+        if (!mIsTestMode)
+            mProgressView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingView() {
+        mProgressView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setTestMode(boolean isTestMode) {
+        mIsTestMode = isTestMode;
     }
 }

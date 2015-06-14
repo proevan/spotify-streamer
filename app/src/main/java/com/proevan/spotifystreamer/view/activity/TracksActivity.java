@@ -3,35 +3,82 @@ package com.proevan.spotifystreamer.view.activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
 import com.proevan.spotifystreamer.presenter.TracksPresenter;
+import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
 import com.proevan.spotifystreamer.view.TracksPageView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import kaaes.spotify.webapi.android.models.Artist;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import kaaes.spotify.webapi.android.models.Track;
 
 public class TracksActivity extends AppCompatActivity implements TracksPageView {
 
     public enum INTENT_BUNDLE_KEY {
-        ARTIST_NAME
+        ARTIST_ID, ARTIST_NAME
     }
 
+    private TrackListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private boolean mIsTestMode = false; // work arround for testing, prevent UI test stuck problem
+
     @Inject
-    TracksPresenter mTracksPresenter;
+    TracksPresenter mPresenter;
+
+    @InjectView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+
+    @InjectView(R.id.no_result_text)
+    TextView mNoResultTextView;
+
+    @InjectView(R.id.progress_view)
+    ProgressBarCircularIndeterminate mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tracks);
         TracksPresenterComponent.Initializer.init(this).inject(this);
-        mTracksPresenter.parseIntentBundle(getIntent().getExtras());
+        setContentView(R.layout.activity_tracks);
+        ButterKnife.inject(this);
+
+        initActionBar();
+        initRecyclerView();
+        mPresenter.onCreateView(getIntent().getExtras());
+    }
+
+    private void initActionBar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void initRecyclerView() {
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new TrackListAdapter();
+        mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
+                Logger.v("mAdapter onItemClick: " + index);
+                mPresenter.onTrackItemClick(mAdapter, index);
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -51,6 +98,8 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == android.R.id.home) {
+            mPresenter.onUpButtonClick();
         }
 
         return super.onOptionsItemSelected(item);
@@ -63,8 +112,9 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
     }
 
     @Override
-    public void setTrackItems(List<Artist> artists) {
-
+    public void setTrackItems(List<Track> tracks) {
+        mAdapter.removeAll();
+        mAdapter.addAll(tracks);
     }
 
     @Override
@@ -84,6 +134,32 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
 
     @Override
     public void closePage() {
+        finish();
+    }
 
+    @Override
+    public void showNoDataMessage() {
+        mNoResultTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoDataMessage() {
+        mNoResultTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoadingView() {
+        if (!mIsTestMode)
+            mProgressView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingView() {
+        mProgressView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setTestMode(boolean isTestMode) {
+        mIsTestMode = isTestMode;
     }
 }

@@ -1,7 +1,6 @@
 package com.proevan.spotifystreamer.presenter.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +17,19 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Track;
 
-public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> {
+public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.ViewHolder> {
 
-    private List<Artist> mItems;
+    private List<Track> mItems;
     private AdapterView.OnItemClickListener mOnItemClickListener;
 
-    public ArtistListAdapter() {
+    public TrackListAdapter() {
         mItems = new ArrayList<>();
     }
 
-    public Artist getItem(int position) {
+    public Track getItem(int position) {
         return mItems.get(position);
     }
 
@@ -39,12 +38,12 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Artist> items) {
+    public void addAll(List<Track> items) {
         mItems.addAll(items);
         notifyDataSetChanged();
     }
 
-    public void addItem(int position, Artist item) {
+    public void addItem(int position, Track item) {
         if (position > mItems.size()) return;
 
         mItems.add(position, item);
@@ -59,10 +58,10 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     }
 
     @Override
-    public ArtistListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public TrackListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.artist_list_item, parent, false);
+                .inflate(R.layout.track_list_item, parent, false);
         ViewHolder vh = new ViewHolder(v, this);
 
         return vh;
@@ -70,12 +69,13 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Artist artist = mItems.get(position);
-        holder.nameTextView.setText(artist.name);
-        loadArtistFirstImage(holder.imageView, artist.images);
+        Track track = mItems.get(position);
+        holder.albumNameTextView.setText(track.name);
+        holder.trackNameTextView.setText(track.album.name);
+        loadTrackFirstImage(holder.imageView, track.album.images);
     }
 
-    private void loadArtistFirstImage(ImageView imageView, List<Image> images) {
+    private void loadTrackFirstImage(ImageView imageView, List<Image> images) {
         if (images.size() == 0) {
             imageView.setImageResource(R.drawable.spotify_placeholder);
             return;
@@ -121,12 +121,14 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @InjectView(R.id.image)
         ImageView imageView;
-        @InjectView(R.id.name)
-        TextView nameTextView;
+        @InjectView(R.id.track_name)
+        TextView trackNameTextView;
+        @InjectView(R.id.album_name)
+        TextView albumNameTextView;
 
-        private ArtistListAdapter mAdapter;
+        private TrackListAdapter mAdapter;
 
-        public ViewHolder(View v, ArtistListAdapter adapter) {
+        public ViewHolder(View v, TrackListAdapter adapter) {
             super(v);
             mAdapter = adapter;
             v.setOnClickListener(this);

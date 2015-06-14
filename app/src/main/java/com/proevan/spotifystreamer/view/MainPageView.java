@@ -12,4 +12,11 @@ public interface MainPageView {
     public void clearSearchResult();
     public void openTracksPage(Bundle bundle);
     public void showMessage(String message);
+    public void showNoDataMessage();
+    public void hideNoDataMessage();
+    public void showLoadingView();
+    public void hideLoadingView();
+
+    // for testing
+    public void setTestMode(boolean isTestMode);
 }

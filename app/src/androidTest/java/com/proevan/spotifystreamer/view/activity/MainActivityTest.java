@@ -12,18 +12,6 @@ import com.proevan.spotifystreamer.di.uitestcase.activity.MainActivityTestCase;
 import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
 
 import org.hamcrest.Matcher;
-import org.mockito.Matchers;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.Image;
-import kaaes.spotify.webapi.android.models.Pager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -38,68 +26,23 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.proevan.spotifystreamer.di.module.TestMainPresenterModule.FAKE_NO_IMAGE_ARTIST_NAME;
+import static com.proevan.spotifystreamer.di.module.TestMainPresenterModule.FIRST_FAKE_ARTIST_NAME;
+import static com.proevan.spotifystreamer.di.module.TestMainPresenterModule.LAST_FAKE_ARTIST_NAME;
 import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
 import static org.hamcrest.Matchers.allOf;
-import static org.mockito.Mockito.doAnswer;
 
 public class MainActivityTest extends MainActivityTestCase {
+
+    private static final String TEST_SEARCH_TEXT = "coldplay";
+    private static final String TEST_SEARCH_TEXT_NO_RESULT = "no result";
 
     public void setUp() throws Exception {
         super.setUp();
         getActivity();
         MainPresenterComponent.Initializer.instance.inject(this);
-        stubColdplaySearchResult();
+        getActivity().setTestMode(true);
     }
-
-    // stub block start
-    private void stubColdplaySearchResult() {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                SpotifyCallback<ArtistsPager> callback = (SpotifyCallback<ArtistsPager>)invocationOnMock.getArguments()[1];
-                callback.success(generateFakeColdplaySearchResultArtistPager(), null);
-                return null;
-            }
-        }).when(mMockSpotifyService).searchArtists(Matchers.matches("coldplay"), Matchers.<SpotifyCallback<ArtistsPager>>any());
-    }
-
-    private ArtistsPager generateFakeColdplaySearchResultArtistPager() {
-        ArtistsPager artistsPager = new ArtistsPager();
-        Pager<Artist> artistPager = new Pager<>();
-        artistPager.items = generateFakeColdplaySearchResultArtists();
-        artistsPager.artists = artistPager;
-
-        return artistsPager;
-    }
-
-    private ArrayList<Artist> generateFakeColdplaySearchResultArtists() {
-        ArrayList<Artist> artists = new ArrayList<>();
-        artists.add(generateFakeArtistWithOneImage("Coldplay", "https://i.scdn.co/image/99afd5b3e7ce4b82fdc007dc5ed8dfe0806f6fe2"));
-        artists.add(generateFakeArtistWithOneImage("Coldplay & Lele", null));
-        artists.add(generateFakeArtistWithOneImage("Various Artists - Coldplay Tribute", null));
-        artists.add(generateFakeArtistWithOneImage("Karaoke - Coldplay", null));
-        artists.add(generateFakeArtistWithOneImage("ColdPlay Wu", "https://i.scdn.co/image/d29c1e0ea74efccf7ec2634b5c2d2bc42f522a21"));
-        artists.add(generateFakeArtistWithOneImage("Coldplay Metal Tribute", null));
-        artists.add(generateFakeArtistWithOneImage("Éxito De Coldplay", null));
-        artists.add(generateFakeArtistWithOneImage("Princess of China (In The Style of Coldplay& Rihan", null));
-
-        return artists;
-    }
-
-    private Artist generateFakeArtistWithOneImage(String name, String imageUrl) {
-        Artist artist = new Artist();
-        artist.name = name;
-        List<Image> images = new ArrayList<>();
-        if (imageUrl != null) {
-            Image image = new Image();
-            image.url = imageUrl;
-            images.add(image);
-        }
-        artist.images = images;
-
-        return artist;
-    }
-    // stub block end
 
     // test case block start
     public void testLayoutActionBarTitle() throws Exception {
@@ -127,52 +70,85 @@ public class MainActivityTest extends MainActivityTestCase {
 
         // act
         onView(withId(R.id.search_bar))
-                .perform(typeText("coldplay"));
+                .perform(typeText(TEST_SEARCH_TEXT));
 
         // assert
-        onView(allOf(withText("Coldplay"), withId(R.id.name)))
+        onView(allOf(withText(FIRST_FAKE_ARTIST_NAME), withId(R.id.name)))
                 .check(doesNotExist());
     }
 
-    public void testSearchColdplay() throws Exception {
+    public void testSearch() throws Exception {
         // arrange
 
         // act
-        searchAndWaitForResult("coldplay");
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
 
         // assert
-        onView(allOf(withText("Coldplay"), withId(R.id.name)))
-                .check(matches(isDisplayed()));
-        onView(allOf(withText("Coldplay & Lele"), withId(R.id.name)))
-                .check(matches(isDisplayed()));
-        onView(allOf(withText("Various Artists - Coldplay Tribute"), withId(R.id.name)))
-                .check(matches(isDisplayed()));
-        onView(allOf(withText("Karaoke - Coldplay"), withId(R.id.name)))
+        onView(allOf(withText(FIRST_FAKE_ARTIST_NAME), withId(R.id.name)))
                 .check(matches(isDisplayed()));
     }
 
-    public void testSearchColdplayThenClearText() throws Exception {
+    public void testSearchThenClearText() throws Exception {
         // arrange
 
         // act
-        searchAndWaitForResult("coldplay");
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
         onView(withId(R.id.search_bar))
                 .perform(clearText());
 
         // assert
-        onView(allOf(withText("Coldplay"), withId(R.id.name)))
+        onView(allOf(withText(FIRST_FAKE_ARTIST_NAME), withId(R.id.name)))
                 .check(doesNotExist());
+    }
+
+    public void testNoResult() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult(TEST_SEARCH_TEXT_NO_RESULT);
+
+        // assert
+        onView(withText(R.string.no_result))
+                .check(matches(isDisplayed()));
+    }
+
+    public void testFirstArtistItem() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
+
+        // assert
+        Matcher<View> firstFakeItem = withChild(withText(FIRST_FAKE_ARTIST_NAME));
+        onView(firstFakeItem)
+                .check(matches(isDisplayed()));
+    }
+
+    public void testLastArtistItem() throws Exception {
+        // arrange
+
+        // act
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
+        Matcher<View> lastFakeItem = withChild(withText(LAST_FAKE_ARTIST_NAME));
+        onView(withId(R.id.recycler_view))
+                .perform(scrollTo(lastFakeItem));
+        onView(lastFakeItem)
+                .perform(click());
+
+        // assert
+        onView(lastFakeItem)
+                .check(matches(isDisplayed()));
     }
 
     public void testArtistItemImagePlaceHolder() throws Exception {
         // arrange
 
         // act
-        searchAndWaitForResult("coldplay");
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
 
         // assert
         Drawable placeholderDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.spotify_placeholder);
-        onView(allOf(hasSibling(withText("Coldplay & Lele")), withId(R.id.image)))
+        onView(allOf(hasSibling(withText(FAKE_NO_IMAGE_ARTIST_NAME)), withId(R.id.image)))
                 .check(matches(isImageTheSame(placeholderDrawable)));
     }
 
@@ -180,14 +156,14 @@ public class MainActivityTest extends MainActivityTestCase {
         // arrange
 
         // act
-        searchAndWaitForResult("coldplay");
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
         onView(withId(R.id.recycler_view))
                 .perform(actionOnItemAtPosition(0, click()));
 
         // assert
         onView(withText(getActivity().getString(R.string.title_activity_tracks)))
                 .check(matches(isDisplayed()));
-        onView(withText("Coldplay"))
+        onView(withText(FIRST_FAKE_ARTIST_NAME))
                 .check(matches(isDisplayed()));
     }
 
@@ -195,8 +171,8 @@ public class MainActivityTest extends MainActivityTestCase {
         // arrange
 
         // act
-        searchAndWaitForResult("coldplay");
-        Matcher<View> lastFakeItem = withChild(withText("Princess of China (In The Style of Coldplay& Rihan"));
+        searchAndWaitForResult(TEST_SEARCH_TEXT);
+        Matcher<View> lastFakeItem = withChild(withText(LAST_FAKE_ARTIST_NAME));
         onView(withId(R.id.recycler_view))
                 .perform(scrollTo(lastFakeItem));
         onView(lastFakeItem)
@@ -205,7 +181,7 @@ public class MainActivityTest extends MainActivityTestCase {
         // assert
         onView(withText(getActivity().getString(R.string.title_activity_tracks)))
                 .check(matches(isDisplayed()));
-        onView(withText("Princess of China (In The Style of Coldplay& Rihan"))
+        onView(withText(LAST_FAKE_ARTIST_NAME))
                 .check(matches(isDisplayed()));
     }
     // test case block end
