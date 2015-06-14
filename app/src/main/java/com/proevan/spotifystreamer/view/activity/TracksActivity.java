@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.orhanobut.logger.Logger;
@@ -35,7 +36,7 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
 
     private TrackListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private boolean mIsTestMode = false; // work arround for testing, prevent UI test stuck problem
+    private boolean mIsTestMode = false; // workaround for testing, prevent UI test stuck problem
 
     @Inject
     TracksPresenter mPresenter;
@@ -119,7 +120,7 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
 
     @Override
     public void clearTrackItems() {
-
+        mAdapter.removeAll();
     }
 
     @Override
@@ -129,7 +130,7 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
 
     @Override
     public void showMessage(String message) {
-
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
