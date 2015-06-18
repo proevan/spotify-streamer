@@ -75,11 +75,6 @@ public class TracksPresenterImpl implements TracksPresenter {
     }
 
     @Override
-    public void onUpButtonClick() {
-        mTracksPageView.closePage();
-    }
-
-    @Override
     public void onTrackItemClick(TrackListAdapter adapter, int index) {
 
     }

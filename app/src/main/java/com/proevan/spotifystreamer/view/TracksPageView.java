@@ -14,7 +14,6 @@ public interface TracksPageView {
     public void clearTrackItems();
     public void openPlayerPage(Bundle bundle);
     public void showMessage(String message);
-    public void closePage();
     public void showNoDataMessage();
     public void hideNoDataMessage();
     public void showLoadingView();
