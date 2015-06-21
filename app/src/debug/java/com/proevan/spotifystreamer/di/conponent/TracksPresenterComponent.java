@@ -1,5 +1,6 @@
 package com.proevan.spotifystreamer.di.conponent;
 
+import com.proevan.spotifystreamer.di.module.TestSpotifyServiceModule;
 import com.proevan.spotifystreamer.di.module.TestTracksPresenterModule;
 import com.proevan.spotifystreamer.di.uitestcase.activity.TracksActivityTestCase;
 import com.proevan.spotifystreamer.view.TracksPageView;
@@ -10,7 +11,10 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {TestTracksPresenterModule.class})
+@Component(modules = {
+        TestTracksPresenterModule.class,
+        TestSpotifyServiceModule.class
+})
 public interface TracksPresenterComponent {
 
     void inject(TracksActivity activity);
@@ -19,15 +23,18 @@ public interface TracksPresenterComponent {
 
     class Initializer {
 
-        public static TracksPresenterComponent instance;
+        private static TracksPresenterComponent sInstance;
+        private static TracksPageView sTracksPageView;
 
         public static TracksPresenterComponent init(TracksPageView tracksPageView) {
-            TracksPresenterComponent component = DaggerTracksPresenterComponent.builder()
+            if (sInstance == null || !sTracksPageView.equals(tracksPageView)) {
+                sTracksPageView = tracksPageView;
+                sInstance = DaggerTracksPresenterComponent.builder()
                         .testTracksPresenterModule(new TestTracksPresenterModule(tracksPageView))
                         .build();
-            instance = component;
+            }
 
-            return component;
+            return sInstance;
         }
     }
 

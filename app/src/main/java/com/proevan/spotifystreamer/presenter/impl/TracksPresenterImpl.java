@@ -1,7 +1,5 @@
 package com.proevan.spotifystreamer.presenter.impl;
 
-import android.os.Bundle;
-
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.presenter.TracksPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
@@ -18,12 +16,8 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Tracks;
 import retrofit.client.Response;
 
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_ID;
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_NAME;
-
 public class TracksPresenterImpl implements TracksPresenter {
 
-    private static final String EMPTY_STRING = "";
     private static final String API_COUNTRY_CODE_PARAM_KEY = "country";
     private static final String DEFAULT_API_COUNTRY_CODE = "US";
 
@@ -37,16 +31,9 @@ public class TracksPresenterImpl implements TracksPresenter {
     }
 
     @Override
-    public void onCreateView(Bundle extras) {
+    public void loadTracks(String artistId) {
         mTracksPageView.hideNoDataMessage();
         mTracksPageView.showLoadingView();
-        String artistId = extras.getString(ARTIST_ID.name(), EMPTY_STRING);
-        String artistName = extras.getString(ARTIST_NAME.name(), EMPTY_STRING);
-        mTracksPageView.setSubtitle(artistName);
-        loadTracks(artistId);
-    }
-
-    private void loadTracks(String artistId) {
         mSpotifyService.getArtistTopTrack(artistId, generateQueryParamWithCountryCode(), new SpotifyCallback<Tracks>() {
             @Override
             public void success(Tracks tracks, Response response) {

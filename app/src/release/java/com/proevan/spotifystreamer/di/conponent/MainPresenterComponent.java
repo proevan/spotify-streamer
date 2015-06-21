@@ -1,6 +1,7 @@
 package com.proevan.spotifystreamer.di.conponent;
 
 import com.proevan.spotifystreamer.di.module.MainPresenterModule;
+import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 import com.proevan.spotifystreamer.view.MainPageView;
 import com.proevan.spotifystreamer.view.activity.MainActivity;
 
@@ -9,7 +10,10 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {MainPresenterModule.class})
+@Component(modules = {
+        MainPresenterModule.class,
+        SpotifyServiceModule.class
+})
 public interface MainPresenterComponent {
 
     void inject(MainActivity activity);

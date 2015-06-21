@@ -9,16 +9,13 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public interface TracksPageView {
 
-    public void setSubtitle(String subtitle);
-    public void setTrackItems(List<Track> tracks);
-    public void clearTrackItems();
-    public void openPlayerPage(Bundle bundle);
-    public void showMessage(String message);
-    public void showNoDataMessage();
-    public void hideNoDataMessage();
-    public void showLoadingView();
-    public void hideLoadingView();
-
-    // for testing
-    public void setTestMode(boolean isTestMode);
+    void setSubtitle(String subtitle);
+    void setTrackItems(List<Track> tracks);
+    void clearTrackItems();
+    void openPlayerPage(Bundle bundle);
+    void showMessage(String message);
+    void showNoDataMessage();
+    void hideNoDataMessage();
+    void showLoadingView();
+    void hideLoadingView();
 }

@@ -1,7 +1,5 @@
 package com.proevan.spotifystreamer.presenter.impl;
 
-import android.os.Bundle;
-
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
@@ -16,9 +14,6 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.client.Response;
-
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_ID;
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_NAME;
 
 public class MainPresenterImpl implements MainPresenter {
 
@@ -74,10 +69,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onSearchResultItemClick(ArtistListAdapter adapter, int position) {
-        Bundle bundle = new Bundle();
         Artist artist = adapter.getItem(position);
-        bundle.putString(ARTIST_ID.name(), artist.id);
-        bundle.putString(ARTIST_NAME.name(), artist.name);
-        mMainPageView.openTracksPage(bundle);
+        mMainPageView.openTracksPage(artist.id, artist.name);
     }
 }

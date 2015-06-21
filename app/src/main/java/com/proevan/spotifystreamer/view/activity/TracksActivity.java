@@ -1,5 +1,7 @@
 package com.proevan.spotifystreamer.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
+import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
 import com.proevan.spotifystreamer.presenter.TracksPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
@@ -31,13 +34,25 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public class TracksActivity extends AppCompatActivity implements TracksPageView {
 
-    public enum INTENT_BUNDLE_KEY {
-        ARTIST_ID, ARTIST_NAME
+    private static final String INTENT_PARAM_ARTIST_ID = "INTENT_PARAM_USER_ID";
+    private static final String INTENT_PARAM_ARTIST_NAME = "INTENT_PARAM_USER_NAME";
+    private static final String INSTANCE_STATE_PARAM_ARTIST_ID = "STATE_PARAM_USER_ID";
+    private static final String INSTANCE_STATE_PARAM_ARTIST_NAME = "STATE_PARAM_USER_NAME";
+
+    public static Intent getCallingIntent(Context context, String artistId, String artistName) {
+        Intent intent = new Intent(context, TracksActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(INTENT_PARAM_ARTIST_ID, artistId);
+        bundle.putString(INTENT_PARAM_ARTIST_NAME, artistName);
+        intent.putExtras(bundle);
+
+        return intent;
     }
 
+    private String mArtistId;
+    private String mArtistName;
     private TrackListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private boolean mIsTestMode = false; // workaround for testing, prevent UI test stuck problem
 
     @Inject
     TracksPresenter mPresenter;
@@ -54,17 +69,39 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeActivity(savedInstanceState);
         TracksPresenterComponent.Initializer.init(this).inject(this);
         setContentView(R.layout.activity_tracks);
         ButterKnife.inject(this);
 
         initActionBar();
         initRecyclerView();
-        mPresenter.onCreateView(getIntent().getExtras());
+    }
+
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        if (outState != null) {
+            outState.putString(INSTANCE_STATE_PARAM_ARTIST_ID, mArtistId);
+            outState.putString(INSTANCE_STATE_PARAM_ARTIST_NAME, mArtistName);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    private void initializeActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                mArtistId = extras.getString(INTENT_PARAM_ARTIST_ID, "");
+                mArtistName = extras.getString(INTENT_PARAM_ARTIST_NAME, "");
+            }
+        } else {
+            mArtistId = savedInstanceState.getString(INSTANCE_STATE_PARAM_ARTIST_ID);
+            mArtistName = savedInstanceState.getString(INSTANCE_STATE_PARAM_ARTIST_NAME);
+        }
     }
 
     private void initActionBar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSubtitle(mArtistName);
     }
 
     private void initRecyclerView() {
@@ -81,6 +118,7 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+        mPresenter.loadTracks(mArtistId);
     }
 
     @Override
@@ -142,7 +180,7 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
 
     @Override
     public void showLoadingView() {
-        if (!mIsTestMode)
+        if (!SpotifyStreamerApplication.isTestMode())
             mProgressView.setVisibility(View.VISIBLE);
     }
 
@@ -151,8 +189,4 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
         mProgressView.setVisibility(View.GONE);
     }
 
-    @Override
-    public void setTestMode(boolean isTestMode) {
-        mIsTestMode = isTestMode;
-    }
 }

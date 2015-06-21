@@ -4,6 +4,6 @@ import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
 
 public interface MainPresenter {
 
-    public void onSearchTextChange(CharSequence text);
-    public void onSearchResultItemClick(ArtistListAdapter adapter, int position);
+    void onSearchTextChange(CharSequence text);
+    void onSearchResultItemClick(ArtistListAdapter adapter, int position);
 }

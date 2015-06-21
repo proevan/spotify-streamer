@@ -26,14 +26,4 @@ public class MainPresenterModule {
     MainPresenter provideMainPresenter(SpotifyService spotifyService){
         return new MainPresenterImpl(mMainPageView, spotifyService);
     }
-
-    @Provides
-    @Singleton
-    SpotifyService provideSpotifyService(){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(SpotifyApi.SPOTIFY_WEB_API_ENDPOINT)
-                .build();
-
-        return restAdapter.create(SpotifyService.class);
-    }
 }

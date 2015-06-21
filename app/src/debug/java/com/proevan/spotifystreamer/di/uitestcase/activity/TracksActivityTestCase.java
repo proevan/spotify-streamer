@@ -14,6 +14,9 @@ public class TracksActivityTestCase extends ActivityInstrumentationTestCase2<Tra
     @Inject
     protected SpotifyService mMockSpotifyService;
 
+    @Inject
+    protected TracksPresenter mTracksPresenter;
+
     public TracksActivityTestCase() {
         super(TracksActivity.class);
     }

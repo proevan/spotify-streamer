@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
+import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
 import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
 
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private boolean mIsTestMode = false; // workaround for testing, prevent UI test stuck problem
 
     @Inject
     MainPresenter mPresenter;
@@ -113,10 +113,9 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
     }
 
     @Override
-    public void openTracksPage(Bundle bundle) {
-        Intent intent = new Intent(this, TracksActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+    public void openTracksPage(String artistId, String artistName) {
+        Intent intentToLaunch = TracksActivity.getCallingIntent(this, artistId, artistName);
+        startActivity(intentToLaunch);
     }
 
     @Override
@@ -136,17 +135,12 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
 
     @Override
     public void showLoadingView() {
-        if (!mIsTestMode)
+        if (!SpotifyStreamerApplication.isTestMode())
             mProgressView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoadingView() {
         mProgressView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void setTestMode(boolean isTestMode) {
-        mIsTestMode = isTestMode;
     }
 }

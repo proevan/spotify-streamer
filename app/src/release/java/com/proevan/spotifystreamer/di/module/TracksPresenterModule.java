@@ -26,14 +26,4 @@ public class TracksPresenterModule {
     TracksPresenter provideTracksPresenter(SpotifyService spotifyService){
         return new TracksPresenterImpl(mTracksPageView, spotifyService);
     }
-
-    @Provides
-    @Singleton
-    SpotifyService provideSpotifyService(){
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(SpotifyApi.SPOTIFY_WEB_API_ENDPOINT)
-                .build();
-
-        return restAdapter.create(SpotifyService.class);
-    }
 }
