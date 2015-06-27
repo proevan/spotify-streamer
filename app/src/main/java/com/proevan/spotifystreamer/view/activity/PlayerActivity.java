@@ -39,7 +39,7 @@ public class PlayerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        restoreInstanceState(savedInstanceState);
+        initializeActivity(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         if (savedInstanceState == null)
@@ -54,7 +54,7 @@ public class PlayerActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void restoreInstanceState(Bundle savedInstanceState) {
+    private void initializeActivity(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {

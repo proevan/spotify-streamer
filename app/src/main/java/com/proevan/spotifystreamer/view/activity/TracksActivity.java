@@ -36,7 +36,7 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        restoreInstanceState(savedInstanceState);
+        initializeActivity(savedInstanceState);
         setContentView(R.layout.activity_tracks);
 
         initActionBar();
@@ -52,7 +52,7 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
         super.onSaveInstanceState(outState);
     }
 
-    private void restoreInstanceState(Bundle savedInstanceState) {
+    private void initializeActivity(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
