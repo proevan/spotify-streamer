@@ -128,11 +128,6 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     }
 
     @Override
-    public void onScrubBarSelect() {
-
-    }
-
-    @Override
     public void onViewPause() {
         onPauseButtonClick();
     }

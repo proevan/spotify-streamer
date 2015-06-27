@@ -139,7 +139,7 @@ public class SearchFragment extends Fragment implements SearchView {
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(SpotifyStreamerApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+        SpotifyStreamerApplication.showToast(message, Toast.LENGTH_SHORT);
     }
 
     @Override

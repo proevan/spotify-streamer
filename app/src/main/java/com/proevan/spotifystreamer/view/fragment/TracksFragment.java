@@ -127,18 +127,13 @@ public class TracksFragment extends Fragment implements TracksView {
     }
 
     @Override
-    public void clearTrackItems() {
-        mAdapter.removeAll();
-    }
-
-    @Override
     public void openPlayerView(Tracks tracks, int selectIndex) {
         mTracksFragmentEventListener.openPlayerView(tracks, selectIndex);
     }
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(SpotifyStreamerApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+        SpotifyStreamerApplication.showToast(message, Toast.LENGTH_SHORT);
     }
 
     @Override
