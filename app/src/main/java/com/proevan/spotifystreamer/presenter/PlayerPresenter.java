@@ -11,8 +11,6 @@ public interface PlayerPresenter {
     void onPauseButtonClick();
     void onPreviousButtonClick();
     void onNextButtonClick();
-    void onScrubBarSelect();
     void onViewPause();
     void onViewDestory();
-
 }

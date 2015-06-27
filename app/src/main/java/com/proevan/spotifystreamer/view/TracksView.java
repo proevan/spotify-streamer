@@ -8,7 +8,6 @@ import kaaes.spotify.webapi.android.models.Tracks;
 public interface TracksView {
 
     void setTrackItems(List<Track> tracks);
-    void clearTrackItems();
     void openPlayerView(Tracks tracks, int selectIndex);
     void showMessage(String message);
     void showNoDataMessage();
