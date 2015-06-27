@@ -1,17 +1,15 @@
 package com.proevan.spotifystreamer.view;
 
-import android.os.Bundle;
-
 import java.util.List;
 
-import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.Tracks;
 
-public interface TracksPageView {
+public interface TracksView {
 
     void setTrackItems(List<Track> tracks);
     void clearTrackItems();
-    void openPlayerPage(Bundle bundle);
+    void openPlayerPage(Tracks tracks, int selectIndex);
     void showMessage(String message);
     void showNoDataMessage();
     void hideNoDataMessage();

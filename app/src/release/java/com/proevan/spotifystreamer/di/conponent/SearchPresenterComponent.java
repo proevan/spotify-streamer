@@ -2,7 +2,7 @@ package com.proevan.spotifystreamer.di.conponent;
 
 import com.proevan.spotifystreamer.di.module.SearchPresenterModule;
 import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
-import com.proevan.spotifystreamer.view.SearchPageView;
+import com.proevan.spotifystreamer.view.SearchView;
 import com.proevan.spotifystreamer.view.activity.MainActivity;
 import com.proevan.spotifystreamer.view.fragment.SearchFragment;
 
@@ -23,9 +23,9 @@ public interface SearchPresenterComponent {
 
     class Initializer {
 
-        public static SearchPresenterComponent init(SearchPageView searchPageView) {
+        public static SearchPresenterComponent init(SearchView searchView) {
             return DaggerSearchPresenterComponent.builder()
-                    .searchPresenterModule(new SearchPresenterModule(searchPageView))
+                    .searchPresenterModule(new SearchPresenterModule(searchView))
                     .build();
         }
     }

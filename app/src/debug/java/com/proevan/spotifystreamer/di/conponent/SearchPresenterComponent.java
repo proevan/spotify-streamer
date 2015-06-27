@@ -4,7 +4,7 @@ import com.proevan.spotifystreamer.di.module.TestSearchPresenterModule;
 import com.proevan.spotifystreamer.di.module.TestSpotifyServiceModule;
 import com.proevan.spotifystreamer.di.uitestcase.activity.MainActivityTestCase;
 import com.proevan.spotifystreamer.di.uitestcase.fragment.SearchFragmentTestCase;
-import com.proevan.spotifystreamer.view.SearchPageView;
+import com.proevan.spotifystreamer.view.SearchView;
 import com.proevan.spotifystreamer.view.activity.MainActivity;
 import com.proevan.spotifystreamer.view.fragment.SearchFragment;
 
@@ -28,13 +28,13 @@ public interface SearchPresenterComponent {
     class Initializer {
 
         private static SearchPresenterComponent sInstance;
-        private static SearchPageView sSearchPageView;
+        private static SearchView sSearchView;
 
-        public static SearchPresenterComponent init(SearchPageView searchPageView) {
-            if (sInstance == null || !sSearchPageView.equals(searchPageView)) {
-                sSearchPageView = searchPageView;
+        public static SearchPresenterComponent init(SearchView searchView) {
+            if (sInstance == null || !sSearchView.equals(searchView)) {
+                sSearchView = searchView;
                 sInstance = DaggerSearchPresenterComponent.builder()
-                        .testSearchPresenterModule(new TestSearchPresenterModule(searchPageView))
+                        .testSearchPresenterModule(new TestSearchPresenterModule(searchView))
                         .build();
             }
 

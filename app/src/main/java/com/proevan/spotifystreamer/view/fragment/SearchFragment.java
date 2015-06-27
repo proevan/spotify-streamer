@@ -19,7 +19,7 @@ import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.SearchPresenterComponent;
 import com.proevan.spotifystreamer.presenter.SearchPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
-import com.proevan.spotifystreamer.view.SearchPageView;
+import com.proevan.spotifystreamer.view.SearchView;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 
 import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
-public class SearchFragment extends Fragment implements SearchPageView {
+public class SearchFragment extends Fragment implements SearchView {
 
     private ArtistListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;

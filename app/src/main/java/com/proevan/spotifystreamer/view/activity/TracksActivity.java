@@ -16,8 +16,8 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
 
     private static final String INTENT_PARAM_ARTIST_ID = "INTENT_PARAM_USER_ID";
     private static final String INTENT_PARAM_ARTIST_NAME = "INTENT_PARAM_USER_NAME";
-    private static final String INSTANCE_STATE_PARAM_ARTIST_ID = "STATE_PARAM_USER_ID";
-    private static final String INSTANCE_STATE_PARAM_ARTIST_NAME = "STATE_PARAM_USER_NAME";
+    private static final String INSTANCE_STATE_PARAM_ARTIST_ID = "INSTANCE_STATE_PARAM_ARTIST_ID";
+    private static final String INSTANCE_STATE_PARAM_ARTIST_NAME = "INSTANCE_STATE_PARAM_ARTIST_NAME";
 
     public static Intent getCallingIntent(Context context, String artistId, String artistName) {
         Intent intent = new Intent(context, TracksActivity.class);

@@ -3,7 +3,7 @@ package com.proevan.spotifystreamer.presenter.impl;
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.presenter.TracksPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
-import com.proevan.spotifystreamer.view.TracksPageView;
+import com.proevan.spotifystreamer.view.TracksView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,35 +21,42 @@ public class TracksPresenterImpl implements TracksPresenter {
     private static final String API_COUNTRY_CODE_PARAM_KEY = "country";
     private static final String DEFAULT_API_COUNTRY_CODE = "US";
 
-    private TracksPageView mTracksPageView;
+    private TracksView mTracksView;
     private SpotifyService mSpotifyService;
+    private Tracks mTracks;
 
     @Inject
-    public TracksPresenterImpl(TracksPageView tracksPageView, SpotifyService spotifyService) {
-        mTracksPageView = tracksPageView;
+    public TracksPresenterImpl(TracksView tracksView, SpotifyService spotifyService) {
+        mTracksView = tracksView;
         mSpotifyService = spotifyService;
     }
 
     @Override
+    public void onViewCreated(String artistId) {
+        loadTracks(artistId);
+    }
+
+    @Override
     public void loadTracks(String artistId) {
-        mTracksPageView.hideNoDataMessage();
-        mTracksPageView.showLoadingView();
+        mTracksView.hideNoDataMessage();
+        mTracksView.showLoadingView();
         mSpotifyService.getArtistTopTrack(artistId, generateQueryParamWithCountryCode(), new SpotifyCallback<Tracks>() {
             @Override
             public void success(Tracks tracks, Response response) {
                 Logger.d("loadTracks success");
-                mTracksPageView.hideLoadingView();
-                mTracksPageView.setTrackItems(tracks.tracks);
+                mTracks = tracks;
+                mTracksView.hideLoadingView();
+                mTracksView.setTrackItems(tracks.tracks);
                 if (tracks.tracks.size() == 0)
-                    mTracksPageView.showNoDataMessage();
+                    mTracksView.showNoDataMessage();
             }
 
             @Override
             public void failure(SpotifyError spotifyError) {
                 Logger.e("loadTracks failure: " + spotifyError.getMessage());
-                mTracksPageView.hideLoadingView();
-                mTracksPageView.showMessage(spotifyError.getLocalizedMessage());
-                mTracksPageView.showNoDataMessage();
+                mTracksView.hideLoadingView();
+                mTracksView.showMessage(spotifyError.getLocalizedMessage());
+                mTracksView.showNoDataMessage();
             }
         });
     }
@@ -63,6 +70,6 @@ public class TracksPresenterImpl implements TracksPresenter {
 
     @Override
     public void onTrackItemClick(TrackListAdapter adapter, int index) {
-
+        mTracksView.openPlayerPage(mTracks, index);
     }
 }

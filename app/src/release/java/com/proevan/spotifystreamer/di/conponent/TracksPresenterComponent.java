@@ -2,7 +2,7 @@ package com.proevan.spotifystreamer.di.conponent;
 
 import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 import com.proevan.spotifystreamer.di.module.TracksPresenterModule;
-import com.proevan.spotifystreamer.view.TracksPageView;
+import com.proevan.spotifystreamer.view.TracksView;
 import com.proevan.spotifystreamer.view.activity.TracksActivity;
 import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
@@ -23,9 +23,9 @@ public interface TracksPresenterComponent {
 
     class Initializer {
 
-        public static TracksPresenterComponent init(TracksPageView tracksPageView) {
+        public static TracksPresenterComponent init(TracksView tracksView) {
             return DaggerTracksPresenterComponent.builder()
-                    .tracksPresenterModule(new TracksPresenterModule(tracksPageView))
+                    .tracksPresenterModule(new TracksPresenterModule(tracksView))
                     .build();
         }
     }

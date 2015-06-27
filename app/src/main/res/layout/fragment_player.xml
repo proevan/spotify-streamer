@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/fragment_horizontal_margin"
+                android:paddingRight="@dimen/fragment_horizontal_margin"
+                android:paddingTop="@dimen/fragment_vertical_margin"
+                android:paddingBottom="@dimen/fragment_vertical_margin"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                tools:context="com.proevan.spotifystreamer.view.fragment.PlayerFragment">
+
+    <TextView
+        android:id="@+id/artists_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Coldplay"/>
+
+    <TextView
+        android:id="@+id/album_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Ghost Stories"/>
+    
+    <ImageView
+        android:id="@+id/album_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:background="@android:color/holo_blue_dark"/>
+
+    <TextView
+        android:id="@+id/track_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="A Sky Full of Stars"/>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/previous_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@android:drawable/ic_media_previous"/>
+
+        <Button
+            android:id="@+id/play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@android:drawable/ic_media_play"/>
+
+        <Button
+            android:id="@+id/pause_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@android:drawable/ic_media_pause"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@android:drawable/ic_media_next"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

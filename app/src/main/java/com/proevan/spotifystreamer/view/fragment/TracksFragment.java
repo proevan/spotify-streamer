@@ -1,6 +1,7 @@
 package com.proevan.spotifystreamer.view.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +21,8 @@ import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
 import com.proevan.spotifystreamer.presenter.TracksPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
-import com.proevan.spotifystreamer.view.TracksPageView;
+import com.proevan.spotifystreamer.view.TracksView;
+import com.proevan.spotifystreamer.view.activity.PlayerActivity;
 
 import java.util.List;
 
@@ -29,10 +31,11 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.Tracks;
 
-public class TracksFragment extends Fragment implements TracksPageView {
+public class TracksFragment extends Fragment implements TracksView {
 
-    private static final String ARG_PARAM_ARTIST_ID = "INTENT_PARAM_USER_ID";
+    private static final String ARG_PARAM_ARTIST_ID = "ARG_PARAM_ARTIST_ID";
 
     private String mArtistId;
     private TrackListAdapter mAdapter;
@@ -96,7 +99,12 @@ public class TracksFragment extends Fragment implements TracksPageView {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-        mPresenter.loadTracks(mArtistId);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPresenter.onViewCreated(mArtistId);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -133,8 +141,9 @@ public class TracksFragment extends Fragment implements TracksPageView {
     }
 
     @Override
-    public void openPlayerPage(Bundle bundle) {
-
+    public void openPlayerPage(Tracks tracks, int selectIndex) {
+        Intent LaunchIntent = PlayerActivity.getCallingIntent(getActivity(), tracks, selectIndex);
+        startActivity(LaunchIntent);
     }
 
     @Override
