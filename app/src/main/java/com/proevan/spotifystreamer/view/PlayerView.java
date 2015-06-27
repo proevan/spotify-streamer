@@ -7,6 +7,6 @@ public interface PlayerView {
     void setTrackItem(TrackItem trackItem);
     void switchToPlayButton();
     void switchToPauseButton();
-    void setSeekBarMax(int max);
-    void setSeekBarProgress(int progress);
+    void setTrackDuration(int durationInMillisecond);
+    void setPlayingProgress(int progressInMillisecond);
 }

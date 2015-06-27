@@ -17,8 +17,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import kaaes.spotify.webapi.android.SpotifyService;
-
 public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     private static final int SEEK_BAR_UPDATE_FREQUENCY_IN_MS = 16;
@@ -33,7 +31,7 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
         @Override
         public void run() {
             if (mMediaPlayer != null && mIsPlayingMode) {
-                mPlayerView.setSeekBarProgress(mMediaPlayer.getCurrentPosition());
+                mPlayerView.setPlayingProgress(mMediaPlayer.getCurrentPosition());
                 new Handler().postDelayed(mSeekBarUpdateRunnable, SEEK_BAR_UPDATE_FREQUENCY_IN_MS);
             }
         }
@@ -145,7 +143,7 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        mPlayerView.setSeekBarMax(mediaPlayer.getDuration());
+        mPlayerView.setTrackDuration(mediaPlayer.getDuration());
         if (mIsPlayingMode)
             mMediaPlayer.start();
     }

@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import org.parceler.Parcels;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,7 @@ public class PlayerFragment extends Fragment implements PlayerView {
 
     private static final String ARG_PARAM_TRACK_ITEMS = "ARG_PARAM_TRACK_ITEMS";
     private static final String ARG_PARAM_PLAY_INDEX = "ARG_PARAM_PLAY_INDEX";
+    private static final int MINUTE_IN_MILLISECOND = 60 * 1000;
 
     private List<TrackItem> mTrackItems;
     private int mPlayIndex;
@@ -51,6 +53,12 @@ public class PlayerFragment extends Fragment implements PlayerView {
 
     @InjectView(R.id.track_name)
     TextView mTrackName;
+
+    @InjectView(R.id.current_time)
+    TextView mCurrentTime;
+
+    @InjectView(R.id.duration)
+    TextView mDuration;
 
     @InjectView(R.id.play_btn)
     ImageButton mPlayButton;
@@ -156,7 +164,14 @@ public class PlayerFragment extends Fragment implements PlayerView {
                     .load(trackItem.getAlbumCoverImageUrl())
                     .into(mAlbumImage);
         if (trackItem.getDurationInMillisecond() != null)
-            mSeekBar.setMax(trackItem.getDurationInMillisecond().intValue());
+            mDuration.setText(durationToString(trackItem.getDurationInMillisecond().intValue()));
+    }
+
+    private String durationToString(int duration) {
+        return String.format("%d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes((long) duration),
+                TimeUnit.MILLISECONDS.toSeconds((long) duration % MINUTE_IN_MILLISECOND)
+        );
     }
 
     private String concatArtistsName(List<String> aritstNames) {
@@ -181,12 +196,14 @@ public class PlayerFragment extends Fragment implements PlayerView {
     }
 
     @Override
-    public void setSeekBarMax(int max) {
-        mSeekBar.setMax(max);
+    public void setTrackDuration(int durationInMillisecond) {
+        mSeekBar.setMax(durationInMillisecond);
+        mDuration.setText(durationToString(durationInMillisecond));
     }
 
     @Override
-    public void setSeekBarProgress(int progress) {
-        mSeekBar.setProgress(progress);
+    public void setPlayingProgress(int progressInMillisecond) {
+        mSeekBar.setProgress(progressInMillisecond);
+        mCurrentTime.setText(durationToString(progressInMillisecond));
     }
 }
