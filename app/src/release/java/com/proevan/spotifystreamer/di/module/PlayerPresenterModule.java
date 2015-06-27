@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import kaaes.spotify.webapi.android.SpotifyService;
 
 @Module
 public class PlayerPresenterModule {

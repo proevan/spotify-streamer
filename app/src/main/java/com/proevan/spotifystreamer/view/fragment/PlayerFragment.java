@@ -103,11 +103,11 @@ public class PlayerFragment extends FixedDialogFragment implements PlayerView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PlayerPresenterComponent.Initializer.init(this).inject(this);
         if (getArguments() != null) {
             mTrackItems = Parcels.unwrap(getArguments().getParcelable(ARG_PARAM_TRACK_ITEMS));
             mPlayIndex = getArguments().getInt(ARG_PARAM_PLAY_INDEX);
         }
+        PlayerPresenterComponent.Initializer.init(this).inject(this);
     }
 
     @Override

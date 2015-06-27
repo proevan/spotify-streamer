@@ -2,7 +2,6 @@ package com.proevan.spotifystreamer.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.model.TrackItem;
 import com.proevan.spotifystreamer.view.fragment.PlayerFragment;
-import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
 import org.parceler.Parcels;
 

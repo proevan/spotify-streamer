@@ -1,7 +1,6 @@
 package com.proevan.spotifystreamer.di.conponent;
 
 import com.proevan.spotifystreamer.di.module.PlayerPresenterModule;
-import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 import com.proevan.spotifystreamer.view.PlayerView;
 import com.proevan.spotifystreamer.view.activity.PlayerActivity;
 import com.proevan.spotifystreamer.view.fragment.PlayerFragment;

@@ -1,8 +1,6 @@
 package com.proevan.spotifystreamer.view.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +20,6 @@ import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
 import com.proevan.spotifystreamer.presenter.TracksPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
 import com.proevan.spotifystreamer.view.TracksView;
-import com.proevan.spotifystreamer.view.activity.PlayerActivity;
 
 import java.util.List;
 
