@@ -26,6 +26,8 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     private int mCurrentPlayingIndex;
     private boolean mIsPlayingMode = false;
     private boolean mIsPrepareStarted = false;
+    private boolean mIsPrepared = false;
+    private boolean mIsSeekBarUpdating = false;
 
     private Runnable mSeekBarUpdateRunnable = new Runnable() {
         @Override
@@ -33,6 +35,8 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
             if (mMediaPlayer != null && mIsPlayingMode) {
                 mPlayerView.setPlayingProgress(mMediaPlayer.getCurrentPosition());
                 new Handler().postDelayed(mSeekBarUpdateRunnable, SEEK_BAR_UPDATE_FREQUENCY_IN_MS);
+            } else {
+                mIsSeekBarUpdating = false;
             }
         }
     };
@@ -57,11 +61,16 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     }
 
     private void playTrack() {
-        new Handler().post(mSeekBarUpdateRunnable);
-        if (mIsPrepareStarted)
-            mMediaPlayer.start();
-        else
+        if (!mIsSeekBarUpdating) {
+            mIsSeekBarUpdating = true;
+            new Handler().post(mSeekBarUpdateRunnable);
+        }
+        if (mIsPrepareStarted) {
+            if (mIsPrepared)
+                mMediaPlayer.start();
+        } else {
             prepareMediaPlayer(getCurrentTrackItem().getPreviewUrl());
+        }
     }
 
     private TrackItem getCurrentTrackItem() {
@@ -70,6 +79,7 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
 
     private void prepareMediaPlayer(String previewUrl) {
         mIsPrepareStarted = true;
+        mIsPrepared = false;
         if (mMediaPlayer != null)
             mMediaPlayer.release();
         mMediaPlayer = new MediaPlayer();
@@ -91,7 +101,7 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     public void onPauseButtonClick() {
         mIsPlayingMode = false;
         mPlayerView.switchToPlayButton();
-        if (mMediaPlayer != null)
+        if (mMediaPlayer != null && mIsPrepared)
             mMediaPlayer.pause();
     }
 
@@ -142,6 +152,7 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
+        mIsPrepared = true;
         mPlayerView.setTrackDuration(mediaPlayer.getDuration());
         if (mIsPlayingMode)
             mMediaPlayer.start();
