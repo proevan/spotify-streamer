@@ -3,9 +3,12 @@ package com.proevan.spotifystreamer.view.fragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.proevan.spotifystreamer.R;
@@ -24,6 +27,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class PlayerFragment extends Fragment implements PlayerView {
 
@@ -48,17 +52,34 @@ public class PlayerFragment extends Fragment implements PlayerView {
     @InjectView(R.id.track_name)
     TextView mTrackName;
 
-    @InjectView(R.id.previous_btn)
-    TextView mPreviousButton;
-
-    @InjectView(R.id.next_btn)
-    TextView mNextButton;
-
     @InjectView(R.id.play_btn)
-    TextView mPlayButton;
+    ImageButton mPlayButton;
 
     @InjectView(R.id.pause_btn)
-    TextView mPauseButton;
+    ImageButton mPauseButton;
+
+    @InjectView(R.id.seekbar)
+    SeekBar mSeekBar;
+
+    @OnClick(R.id.play_btn)
+    public void onPlayButtonClick() {
+        mPresenter.onPlayButtonClick();
+    }
+
+    @OnClick(R.id.pause_btn)
+    public void onPauseButtonClick() {
+        mPresenter.onPauseButtonClick();
+    }
+
+    @OnClick(R.id.next_btn)
+    public void onNextButtonClick() {
+        mPresenter.onNextButtonClick();
+    }
+
+    @OnClick(R.id.previous_btn)
+    public void onPreviousButtonClick() {
+        mPresenter.onPreviousButtonClick();
+    }
 
     public static PlayerFragment newInstance(List<TrackItem> trackItems, int playIndex) {
         PlayerFragment fragment = new PlayerFragment();
@@ -87,14 +108,36 @@ public class PlayerFragment extends Fragment implements PlayerView {
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_player, container, false);
         ButterKnife.inject(this, fragmentView);
+        disableSeekBarTouch();
 
         return fragmentView;
+    }
+
+    private void disableSeekBarTouch() {
+        mSeekBar.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.onViewCreated(mTrackItems, mPlayIndex);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.onViewPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.onViewDestory();
     }
 
     @Override
@@ -112,6 +155,8 @@ public class PlayerFragment extends Fragment implements PlayerView {
             Picasso.with(mAlbumImage.getContext())
                     .load(trackItem.getAlbumCoverImageUrl())
                     .into(mAlbumImage);
+        if (trackItem.getDurationInMillisecond() != null)
+            mSeekBar.setMax(trackItem.getDurationInMillisecond().intValue());
     }
 
     private String concatArtistsName(List<String> aritstNames) {
@@ -124,12 +169,24 @@ public class PlayerFragment extends Fragment implements PlayerView {
     }
 
     @Override
-    public void showPlayButton() {
-
+    public void switchToPlayButton() {
+        mPlayButton.setVisibility(View.VISIBLE);
+        mPauseButton.setVisibility(View.GONE);
     }
 
     @Override
-    public void showPauseButton() {
+    public void switchToPauseButton() {
+        mPlayButton.setVisibility(View.GONE);
+        mPauseButton.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void setSeekBarMax(int max) {
+        mSeekBar.setMax(max);
+    }
+
+    @Override
+    public void setSeekBarProgress(int progress) {
+        mSeekBar.setProgress(progress);
     }
 }

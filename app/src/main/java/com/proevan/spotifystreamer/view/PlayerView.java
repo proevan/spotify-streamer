@@ -5,6 +5,8 @@ import com.proevan.spotifystreamer.model.TrackItem;
 public interface PlayerView {
 
     void setTrackItem(TrackItem trackItem);
-    void showPlayButton();
-    void showPauseButton();
+    void switchToPlayButton();
+    void switchToPauseButton();
+    void setSeekBarMax(int max);
+    void setSeekBarProgress(int progress);
 }

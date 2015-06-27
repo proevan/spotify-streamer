@@ -8,7 +8,11 @@ public interface PlayerPresenter {
 
     void onViewCreated(List<TrackItem> trackItems, int playIndex);
     void onPlayButtonClick();
+    void onPauseButtonClick();
     void onPreviousButtonClick();
     void onNextButtonClick();
     void onScrubBarSelect();
+    void onViewPause();
+    void onViewDestory();
+
 }
