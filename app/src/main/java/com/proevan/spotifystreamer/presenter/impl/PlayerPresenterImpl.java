@@ -91,7 +91,8 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     public void onPauseButtonClick() {
         mIsPlayingMode = false;
         mPlayerView.switchToPlayButton();
-        mMediaPlayer.pause();
+        if (mMediaPlayer != null)
+            mMediaPlayer.pause();
     }
 
     @Override
