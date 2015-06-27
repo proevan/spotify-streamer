@@ -139,8 +139,10 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
 
     @Override
     public void onViewDestory() {
-        mMediaPlayer.release();
-        mMediaPlayer = null;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     @Override
