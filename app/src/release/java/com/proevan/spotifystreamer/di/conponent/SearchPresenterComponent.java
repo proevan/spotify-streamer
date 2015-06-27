@@ -1,6 +1,6 @@
 package com.proevan.spotifystreamer.di.conponent;
 
-import com.proevan.spotifystreamer.di.module.MainPresenterModule;
+import com.proevan.spotifystreamer.di.module.SearchPresenterModule;
 import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 import com.proevan.spotifystreamer.view.SearchPageView;
 import com.proevan.spotifystreamer.view.activity.MainActivity;
@@ -12,10 +12,10 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        MainPresenterModule.class,
+        SearchPresenterModule.class,
         SpotifyServiceModule.class
 })
-public interface MainPresenterComponent {
+public interface SearchPresenterComponent {
 
     void inject(MainActivity activity);
 
@@ -23,9 +23,9 @@ public interface MainPresenterComponent {
 
     class Initializer {
 
-        public static MainPresenterComponent init(SearchPageView searchPageView) {
-            return DaggerMainPresenterComponent.builder()
-                    .mainPresenterModule(new MainPresenterModule(searchPageView))
+        public static SearchPresenterComponent init(SearchPageView searchPageView) {
+            return DaggerSearchPresenterComponent.builder()
+                    .searchPresenterModule(new SearchPresenterModule(searchPageView))
                     .build();
         }
     }

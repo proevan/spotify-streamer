@@ -101,9 +101,8 @@ public class TracksFragment extends Fragment implements TracksPageView {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mTracksFragmentEventListener != null) {
+        if (mTracksFragmentEventListener != null)
             mTracksFragmentEventListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -112,8 +111,7 @@ public class TracksFragment extends Fragment implements TracksPageView {
         try {
             mTracksFragmentEventListener = (TracksFragmentEventListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            Logger.e("must implement OnFragmentInteractionListener", e);
         }
     }
 

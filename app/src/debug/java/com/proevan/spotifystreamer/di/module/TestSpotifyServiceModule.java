@@ -27,18 +27,25 @@ public class TestSpotifyServiceModule {
     public static final String NO_RESULT_STRING_PARAM = "noResult";
 
     private SpotifyService mMockSpotifyService;
+    private SpotifyServiceStoryTeller mSpotifyServiceStoryTeller;
 
     public TestSpotifyServiceModule() {
         mMockSpotifyService = mock(SpotifyService.class);
-        SpotifyServiceStoryTeller spotifyServiceStoryTeller =
+        mSpotifyServiceStoryTeller =
                 new SpotifyServiceStoryTeller(mMockSpotifyService);
-        spotifyServiceStoryTeller.stubGetArtistTopTrackSuccess(COLDPLAY_TOP_TRACKS_OBJECT);
-        spotifyServiceStoryTeller.stubGetArtistTopTrackSuccess(NO_RESULT_STRING_PARAM, EMPTY_TOP_TRACKS_OBJECT);
+        mSpotifyServiceStoryTeller.stubGetArtistTopTrackSuccess(COLDPLAY_TOP_TRACKS_OBJECT);
+        mSpotifyServiceStoryTeller.stubGetArtistTopTrackSuccess(NO_RESULT_STRING_PARAM, EMPTY_TOP_TRACKS_OBJECT);
     }
 
     @Provides
     @Singleton
     SpotifyService provideTestSpotifyService(){
         return mMockSpotifyService;
+    }
+
+    @Provides
+    @Singleton
+    SpotifyServiceStoryTeller provideTestSpotifyServiceStoryTeller(){
+        return mSpotifyServiceStoryTeller;
     }
 }

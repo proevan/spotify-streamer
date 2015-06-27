@@ -1,7 +1,7 @@
 package com.proevan.spotifystreamer.presenter.impl;
 
 import com.orhanobut.logger.Logger;
-import com.proevan.spotifystreamer.presenter.MainPresenter;
+import com.proevan.spotifystreamer.presenter.SearchPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
 import com.proevan.spotifystreamer.util.DelayActionFilter;
 import com.proevan.spotifystreamer.view.SearchPageView;
@@ -15,7 +15,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.client.Response;
 
-public class MainPresenterImpl implements MainPresenter {
+public class SearchPresenterImpl implements SearchPresenter {
 
     public static final int SEARCH_TYPING_DELAY = 500;
     private SearchPageView mSearchPageView;
@@ -23,7 +23,7 @@ public class MainPresenterImpl implements MainPresenter {
     private DelayActionFilter mDelayActionFilter = new DelayActionFilter(SEARCH_TYPING_DELAY);
 
     @Inject
-    public MainPresenterImpl(SearchPageView searchPageView, SpotifyService spotifyService) {
+    public SearchPresenterImpl(SearchPageView searchPageView, SpotifyService spotifyService) {
         mSearchPageView = searchPageView;
         mSpotifyService = spotifyService;
     }

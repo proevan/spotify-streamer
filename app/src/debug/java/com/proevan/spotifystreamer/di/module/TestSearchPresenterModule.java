@@ -1,7 +1,7 @@
 package com.proevan.spotifystreamer.di.module;
 
-import com.proevan.spotifystreamer.presenter.MainPresenter;
-import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
+import com.proevan.spotifystreamer.presenter.SearchPresenter;
+import com.proevan.spotifystreamer.presenter.impl.SearchPresenterImpl;
 import com.proevan.spotifystreamer.view.SearchPageView;
 
 import org.mockito.Matchers;
@@ -20,17 +20,17 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 @Module
-public class TestMainPresenterModule {
+public class TestSearchPresenterModule {
 
     public SearchPageView mSearchPageView;
 
-    public TestMainPresenterModule(SearchPageView searchPageView) {
+    public TestSearchPresenterModule(SearchPageView searchPageView) {
         mSearchPageView = searchPageView;
     }
 
     @Provides
     @Singleton
-    MainPresenter provideTestMainPresenter(SpotifyService spotifyService){
-        return new MainPresenterImpl(mSearchPageView, spotifyService);
+    SearchPresenter provideTestMainPresenter(SpotifyService spotifyService){
+        return new SearchPresenterImpl(mSearchPageView, spotifyService);
     }
 }

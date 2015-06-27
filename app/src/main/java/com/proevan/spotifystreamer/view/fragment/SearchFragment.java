@@ -16,8 +16,8 @@ import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.SpotifyStreamerApplication;
-import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
-import com.proevan.spotifystreamer.presenter.MainPresenter;
+import com.proevan.spotifystreamer.di.conponent.SearchPresenterComponent;
+import com.proevan.spotifystreamer.presenter.SearchPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
 import com.proevan.spotifystreamer.view.SearchPageView;
 
@@ -39,7 +39,7 @@ public class SearchFragment extends Fragment implements SearchPageView {
     private SearchFragmentEventListener mSearchFragmentEventListener;
 
     @Inject
-    MainPresenter mPresenter;
+    SearchPresenter mPresenter;
 
     @InjectView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -56,6 +56,10 @@ public class SearchFragment extends Fragment implements SearchPageView {
         mPresenter.onSearchTextChange(text);
     }
 
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
+    }
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -63,7 +67,7 @@ public class SearchFragment extends Fragment implements SearchPageView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainPresenterComponent.Initializer.init(this).inject(this);
+        SearchPresenterComponent.Initializer.init(this).inject(this);
     }
 
     @Override
@@ -98,8 +102,7 @@ public class SearchFragment extends Fragment implements SearchPageView {
         try {
             mSearchFragmentEventListener = (SearchFragmentEventListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            Logger.e("must implement OnFragmentInteractionListener", e);
         }
     }
 
@@ -120,7 +123,8 @@ public class SearchFragment extends Fragment implements SearchPageView {
 
     @Override
     public void openTracksPage(String artistId, String artistName) {
-        mSearchFragmentEventListener.openTracksPage(artistId, artistName);
+        if (mSearchFragmentEventListener != null)
+            mSearchFragmentEventListener.openTracksPage(artistId, artistName);
     }
 
     @Override
