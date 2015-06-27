@@ -4,7 +4,8 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="@dimen/list_item_margin">
+              android:padding="@dimen/list_item_margin"
+              android:background="@drawable/bg_list_item">
 
     <ImageView
         android:id="@+id/image"

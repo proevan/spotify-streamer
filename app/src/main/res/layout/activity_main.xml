@@ -4,9 +4,8 @@
                 android:layout_height="match_parent"
                 tools:context=".view.activity.MainActivity">
 
-    <fragment
-        android:id="@+id/search_fragment"
-        android:name="com.proevan.spotifystreamer.view.fragment.SearchFragment"
+    <FrameLayout
+        android:id="@+id/pane_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

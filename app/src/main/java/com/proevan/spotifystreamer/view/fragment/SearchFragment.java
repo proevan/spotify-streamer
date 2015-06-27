@@ -34,7 +34,10 @@ import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
 public class SearchFragment extends Fragment implements SearchView {
 
+    private static final String ARG_PARAM_IS_CHOICE_MODE = "ARG_PARAM_IS_CHOICE_MODE";
+
     private ArtistListAdapter mAdapter;
+    private boolean mIsChoiceMode;
     private RecyclerView.LayoutManager mLayoutManager;
     private SearchFragmentEventListener mSearchFragmentEventListener;
 
@@ -56,8 +59,12 @@ public class SearchFragment extends Fragment implements SearchView {
         mPresenter.onSearchTextChange(text);
     }
 
-    public static SearchFragment newInstance() {
-        return new SearchFragment();
+    public static SearchFragment newInstance(boolean isChoiceMode) {
+        SearchFragment fragment = new SearchFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_PARAM_IS_CHOICE_MODE, isChoiceMode);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public SearchFragment() {
@@ -68,6 +75,9 @@ public class SearchFragment extends Fragment implements SearchView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SearchPresenterComponent.Initializer.init(this).inject(this);
+        if (getArguments() != null) {
+            mIsChoiceMode = getArguments().getBoolean(ARG_PARAM_IS_CHOICE_MODE);
+        }
     }
 
     @Override
@@ -86,6 +96,7 @@ public class SearchFragment extends Fragment implements SearchView {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new ArtistListAdapter();
+        mAdapter.setChoiceMode(mIsChoiceMode);
         mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {

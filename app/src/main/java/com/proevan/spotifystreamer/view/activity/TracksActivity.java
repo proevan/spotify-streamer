@@ -36,10 +36,12 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeActivity(savedInstanceState);
+        restoreInstanceState(savedInstanceState);
         setContentView(R.layout.activity_tracks);
 
         initActionBar();
+        if (savedInstanceState == null)
+            addFragment(R.id.layout_container, TracksFragment.newInstance(mArtistId));
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {
@@ -50,13 +52,12 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
         super.onSaveInstanceState(outState);
     }
 
-    private void initializeActivity(Bundle savedInstanceState) {
+    private void restoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 mArtistId = extras.getString(INTENT_PARAM_ARTIST_ID, "");
                 mArtistName = extras.getString(INTENT_PARAM_ARTIST_NAME, "");
-                addFragment(R.id.layout_container, TracksFragment.newInstance(mArtistId));
             }
         } else {
             mArtistId = savedInstanceState.getString(INSTANCE_STATE_PARAM_ARTIST_ID);

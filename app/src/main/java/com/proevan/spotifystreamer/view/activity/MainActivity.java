@@ -23,6 +23,9 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null)
+            addFragment(R.id.pane_1, SearchFragment.newInstance(is2PaneMode()));
     }
 
     private boolean is2PaneMode() {

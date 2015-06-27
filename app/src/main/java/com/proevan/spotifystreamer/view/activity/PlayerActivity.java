@@ -39,8 +39,11 @@ public class PlayerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeActivity(savedInstanceState);
+        restoreInstanceState(savedInstanceState);
         setContentView(R.layout.activity_player);
+
+        if (savedInstanceState == null)
+            addFragment(R.id.layout_container, PlayerFragment.newInstance(mTrackItems, mPlayIndex));
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {
@@ -51,13 +54,12 @@ public class PlayerActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void initializeActivity(Bundle savedInstanceState) {
+    private void restoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 mTrackItems = Parcels.unwrap(extras.getParcelable(INTENT_PARAM_TRACK_ITEMS));
                 mPlayIndex = extras.getInt(INTENT_PARAM_PLAY_INDEX);
-                addFragment(R.id.layout_container, PlayerFragment.newInstance(mTrackItems, mPlayIndex));
             }
         } else {
             mTrackItems = Parcels.unwrap(savedInstanceState.getParcelable(INSTANCE_STATE_PARAM_TRACK_ITEMS));
