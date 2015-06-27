@@ -23,7 +23,6 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
 
     private static final int SEEK_BAR_UPDATE_FREQUENCY_IN_MS = 16;
     private PlayerView mPlayerView;
-    private SpotifyService mSpotifyService;
     private MediaPlayer mMediaPlayer;
     private List<TrackItem> mTrackItems;
     private int mCurrentPlayingIndex;
@@ -41,9 +40,8 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     };
 
     @Inject
-    public PlayerPresenterImpl(PlayerView playerView, SpotifyService spotifyService) {
+    public PlayerPresenterImpl(PlayerView playerView) {
         mPlayerView = playerView;
-        mSpotifyService = spotifyService;
     }
 
     @Override

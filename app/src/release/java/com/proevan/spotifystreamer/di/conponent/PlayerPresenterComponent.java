@@ -12,8 +12,7 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        PlayerPresenterModule.class,
-        SpotifyServiceModule.class
+        PlayerPresenterModule.class
 })
 public interface PlayerPresenterComponent {
 

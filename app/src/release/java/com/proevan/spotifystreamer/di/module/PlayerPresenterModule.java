@@ -21,7 +21,7 @@ public class PlayerPresenterModule {
 
     @Provides
     @Singleton
-    PlayerPresenter providePlayerPresenter(SpotifyService spotifyService){
-        return new PlayerPresenterImpl(mPlayerView, spotifyService);
+    PlayerPresenter providePlayerPresenter(){
+        return new PlayerPresenterImpl(mPlayerView);
     }
 }
