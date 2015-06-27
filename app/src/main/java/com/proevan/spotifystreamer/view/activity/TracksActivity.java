@@ -70,7 +70,7 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
         setSubtitle(mArtistName);
     }
 
-    public void setSubtitle(String subtitle) {
+    private void setSubtitle(String subtitle) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(subtitle);
     }

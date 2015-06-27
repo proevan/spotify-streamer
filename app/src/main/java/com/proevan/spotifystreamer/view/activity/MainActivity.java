@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FixedDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -60,13 +61,19 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
     @Override
     public void openTracksView(String artistId, String artistName) {
         if (is2PaneMode())
-            attachTracksFragmentToPane2(artistId);
+            attachTracksFragmentToPane2AndAddSubTitle(artistId, artistName);
         else
             launchTracksActivity(artistId, artistName);
     }
 
-    private void attachTracksFragmentToPane2(String artistId) {
+    private void attachTracksFragmentToPane2AndAddSubTitle(String artistId, String artistName) {
+        setSubtitle(artistName);
         replaceFragment(R.id.pane_2, TracksFragment.newInstance(artistId));
+    }
+
+    private void setSubtitle(String subtitle) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setSubtitle(subtitle);
     }
 
     private void launchTracksActivity(String artistId, String artistName) {
