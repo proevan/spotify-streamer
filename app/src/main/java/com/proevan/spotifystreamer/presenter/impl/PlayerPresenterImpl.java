@@ -76,6 +76,7 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);
+        mMediaPlayer.setScreenOnWhilePlaying(true);
         try {
             mMediaPlayer.setDataSource(previewUrl);
             mMediaPlayer.prepareAsync();
