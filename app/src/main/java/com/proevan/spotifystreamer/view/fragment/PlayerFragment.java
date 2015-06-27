@@ -155,7 +155,7 @@ public class PlayerFragment extends FixedDialogFragment implements PlayerView {
             mAlbumName.setText(trackItem.getAlbumName());
         if (trackItem.getArtistNameList() != null) {
             mArtistsName.setText(
-                    concatArtistsName(trackItem.getArtistNameList())
+                    concatArtistsNameWithComma(trackItem.getArtistNameList())
             );
         }
         if (trackItem.getAlbumCoverImageUrl() != null)
@@ -173,9 +173,11 @@ public class PlayerFragment extends FixedDialogFragment implements PlayerView {
         );
     }
 
-    private String concatArtistsName(List<String> aritstNames) {
+    private String concatArtistsNameWithComma(List<String> aritstNames) {
         String result = "";
         for (String artistName : aritstNames) {
+            if (result.length() > 0)
+                result += ", ";
             result += artistName;
         }
 
