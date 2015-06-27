@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                tools:context=".view.activity.MainActivity">
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="com.proevan.spotifystreamer.view.fragment.SearchFragment"
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"/>
+
+    <FrameLayout
+        android:id="@+id/pane_2"
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

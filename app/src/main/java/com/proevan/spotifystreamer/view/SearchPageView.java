@@ -4,7 +4,7 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
 
-public interface MainPageView {
+public interface SearchPageView {
 
     void setResultItems(List<Artist> artists);
     void clearSearchResult();

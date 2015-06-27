@@ -49,7 +49,7 @@ public class MainActivityTest extends MainActivityTestCase {
     public void setUp() throws Exception {
         super.setUp();
         initTestView();
-        MainPresenterComponent.Initializer.init(getActivity()).inject(this);
+//        MainPresenterComponent.Initializer.init(getActivity()).inject(this);
         mSpotifyServiceStoryTeller = new SpotifyServiceStoryTeller(mMockSpotifyService);
     }
 

@@ -1,84 +1,31 @@
 package com.proevan.spotifystreamer.view.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
-import com.proevan.spotifystreamer.SpotifyStreamerApplication;
-import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
-import com.proevan.spotifystreamer.presenter.MainPresenter;
-import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
-import com.proevan.spotifystreamer.view.MainPageView;
+import com.proevan.spotifystreamer.view.fragment.SearchFragment;
+import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnTextChanged;
-import kaaes.spotify.webapi.android.models.Artist;
-
-import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
-
-public class MainActivity extends AppCompatActivity implements MainPageView {
-
-    private ArtistListAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    @Inject
-    MainPresenter mPresenter;
-
-    @InjectView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-
-    @InjectView(R.id.no_result_text)
-    TextView mNoResultTextView;
-
-    @InjectView(R.id.progress_view)
-    ProgressBarCircularIndeterminate mProgressView;
-
-    @OnTextChanged(value = R.id.search_bar, callback = AFTER_TEXT_CHANGED)
-    void onSearchTextChange(final CharSequence text) {
-        Logger.v("onSearchTextChange: " + text);
-        mPresenter.onSearchTextChange(text);
-    }
+public class MainActivity extends BaseActivity implements SearchFragment.SearchFragmentEventListener,
+        TracksFragment.TracksFragmentEventListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainPresenterComponent.Initializer.init(this).inject(this);
+//        MainPresenterComponent.Initializer.init(this).inject(this);
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
-
-        initRecyclerView();
     }
 
-    private void initRecyclerView() {
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new ArtistListAdapter();
-        mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
-                Logger.v("mAdapter onItemClick: " + index);
-                mPresenter.onSearchResultItemClick(mAdapter, index);
-            }
-        });
-        mRecyclerView.setAdapter(mAdapter);
+    private boolean is2PaneMode() {
+        if (findViewById(R.id.pane_2) != null)
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -103,44 +50,25 @@ public class MainActivity extends AppCompatActivity implements MainPageView {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setResultItems(List<Artist> artists) {
-        mAdapter.removeAll();
-        mAdapter.addAll(artists);
-    }
-
-    public void clearSearchResult() {
-        mAdapter.removeAll();
-    }
-
     @Override
     public void openTracksPage(String artistId, String artistName) {
+        if (is2PaneMode())
+            attachTracksFragmentToPane2(artistId);
+        else
+            launchTracksActivity(artistId, artistName);
+    }
+
+    private void attachTracksFragmentToPane2(String artistId) {
+        replaceFragment(R.id.pane_2, TracksFragment.newInstance(artistId));
+    }
+
+    private void launchTracksActivity(String artistId, String artistName) {
         Intent intentToLaunch = TracksActivity.getCallingIntent(this, artistId, artistName);
         startActivity(intentToLaunch);
     }
 
     @Override
-    public void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
+    public void onFragmentInteraction(Uri uri) {
 
-    @Override
-    public void showNoDataMessage() {
-        mNoResultTextView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideNoDataMessage() {
-        mNoResultTextView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showLoadingView() {
-        if (!SpotifyStreamerApplication.isTestMode())
-            mProgressView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoadingView() {
-        mProgressView.setVisibility(View.GONE);
     }
 }

@@ -2,28 +2,26 @@ package com.proevan.spotifystreamer.di.module;
 
 import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
-import com.proevan.spotifystreamer.view.MainPageView;
+import com.proevan.spotifystreamer.view.SearchPageView;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import retrofit.RestAdapter;
 
 @Module
 public class MainPresenterModule {
 
-    private MainPageView mMainPageView;
+    private SearchPageView mSearchPageView;
 
-    public MainPresenterModule(MainPageView mainPageView) {
-        mMainPageView = mainPageView;
+    public MainPresenterModule(SearchPageView searchPageView) {
+        mSearchPageView = searchPageView;
     }
 
     @Provides
     @Singleton
     MainPresenter provideMainPresenter(SpotifyService spotifyService){
-        return new MainPresenterImpl(mMainPageView, spotifyService);
+        return new MainPresenterImpl(mSearchPageView, spotifyService);
     }
 }

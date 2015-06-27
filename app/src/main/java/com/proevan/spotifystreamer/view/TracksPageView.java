@@ -9,7 +9,6 @@ import kaaes.spotify.webapi.android.models.Track;
 
 public interface TracksPageView {
 
-    void setSubtitle(String subtitle);
     void setTrackItems(List<Track> tracks);
     void clearTrackItems();
     void openPlayerPage(Bundle bundle);

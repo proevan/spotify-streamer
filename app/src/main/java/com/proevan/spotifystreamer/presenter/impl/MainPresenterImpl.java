@@ -4,7 +4,7 @@ import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.presenter.MainPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
 import com.proevan.spotifystreamer.util.DelayActionFilter;
-import com.proevan.spotifystreamer.view.MainPageView;
+import com.proevan.spotifystreamer.view.SearchPageView;
 
 import javax.inject.Inject;
 
@@ -18,21 +18,21 @@ import retrofit.client.Response;
 public class MainPresenterImpl implements MainPresenter {
 
     public static final int SEARCH_TYPING_DELAY = 500;
-    private MainPageView mMainPageView;
+    private SearchPageView mSearchPageView;
     private SpotifyService mSpotifyService;
     private DelayActionFilter mDelayActionFilter = new DelayActionFilter(SEARCH_TYPING_DELAY);
 
     @Inject
-    public MainPresenterImpl(MainPageView mainPageView, SpotifyService spotifyService) {
-        mMainPageView = mainPageView;
+    public MainPresenterImpl(SearchPageView searchPageView, SpotifyService spotifyService) {
+        mSearchPageView = searchPageView;
         mSpotifyService = spotifyService;
     }
 
     @Override
     public void onSearchTextChange(final CharSequence text) {
-        mMainPageView.hideNoDataMessage();
-        mMainPageView.showLoadingView();
-        mMainPageView.clearSearchResult();
+        mSearchPageView.hideNoDataMessage();
+        mSearchPageView.showLoadingView();
+        mSearchPageView.clearSearchResult();
         mDelayActionFilter.prepareToDoActionWithDelay(new DelayActionFilter.Callback() {
             @Override
             public void doAction() {
@@ -47,29 +47,29 @@ public class MainPresenterImpl implements MainPresenter {
                 @Override
                 public void success(ArtistsPager artistsPager, Response response) {
                     Logger.d("searchArtist success: " + name);
-                    mMainPageView.hideLoadingView();
-                    mMainPageView.setResultItems(artistsPager.artists.items);
+                    mSearchPageView.hideLoadingView();
+                    mSearchPageView.setResultItems(artistsPager.artists.items);
                     if (artistsPager.artists.items.size() == 0)
-                        mMainPageView.showNoDataMessage();
+                        mSearchPageView.showNoDataMessage();
                 }
 
                 @Override
                 public void failure(SpotifyError spotifyError) {
                     Logger.e("searchArtist failure: " + spotifyError.getMessage());
-                    mMainPageView.hideLoadingView();
-                    mMainPageView.showMessage(spotifyError.getLocalizedMessage());
-                    mMainPageView.showNoDataMessage();
+                    mSearchPageView.hideLoadingView();
+                    mSearchPageView.showMessage(spotifyError.getLocalizedMessage());
+                    mSearchPageView.showNoDataMessage();
                 }
             });
         } else {
-            mMainPageView.hideLoadingView();
-            mMainPageView.clearSearchResult();
+            mSearchPageView.hideLoadingView();
+            mSearchPageView.clearSearchResult();
         }
     }
 
     @Override
     public void onSearchResultItemClick(ArtistListAdapter adapter, int position) {
         Artist artist = adapter.getItem(position);
-        mMainPageView.openTracksPage(artist.id, artist.name);
+        mSearchPageView.openTracksPage(artist.id, artist.name);
     }
 }
