@@ -37,7 +37,6 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeActivity(savedInstanceState);
-//        TracksPresenterComponent.Initializer.init(this).inject(this);
         setContentView(R.layout.activity_tracks);
 
         initActionBar();

@@ -3,7 +3,6 @@ package com.proevan.spotifystreamer.di.conponent;
 import com.proevan.spotifystreamer.di.module.SearchPresenterModule;
 import com.proevan.spotifystreamer.di.module.SpotifyServiceModule;
 import com.proevan.spotifystreamer.view.SearchView;
-import com.proevan.spotifystreamer.view.activity.MainActivity;
 import com.proevan.spotifystreamer.view.fragment.SearchFragment;
 
 import javax.inject.Singleton;
@@ -16,8 +15,6 @@ import dagger.Component;
         SpotifyServiceModule.class
 })
 public interface SearchPresenterComponent {
-
-    void inject(MainActivity activity);
 
     void inject(SearchFragment fragment);
 
