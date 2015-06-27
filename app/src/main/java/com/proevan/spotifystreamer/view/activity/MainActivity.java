@@ -1,15 +1,21 @@
 package com.proevan.spotifystreamer.view.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.proevan.spotifystreamer.R;
+import com.proevan.spotifystreamer.model.TrackItem;
+import com.proevan.spotifystreamer.view.fragment.PlayerFragment;
 import com.proevan.spotifystreamer.view.fragment.SearchFragment;
 import com.proevan.spotifystreamer.view.fragment.TracksFragment;
+
+import kaaes.spotify.webapi.android.models.Tracks;
 
 public class MainActivity extends BaseActivity implements SearchFragment.SearchFragmentEventListener,
         TracksFragment.TracksFragmentEventListener {
@@ -17,7 +23,6 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        MainPresenterComponent.Initializer.init(this).inject(this);
         setContentView(R.layout.activity_main);
     }
 
@@ -51,7 +56,7 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
     }
 
     @Override
-    public void openTracksPage(String artistId, String artistName) {
+    public void openTracksView(String artistId, String artistName) {
         if (is2PaneMode())
             attachTracksFragmentToPane2(artistId);
         else
@@ -68,7 +73,20 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void openPlayerView(Tracks tracks, int selectIndex) {
+        showDialog(
+                PlayerFragment.newInstance(TrackItem.convertFromTracks(tracks.tracks), selectIndex),
+                PlayerFragment.class.getSimpleName()
+        );
+    }
 
+    public void showDialog(DialogFragment dialogFragment, String tag) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        dialogFragment.show(ft, tag);
     }
 }

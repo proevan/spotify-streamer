@@ -1,7 +1,7 @@
 package com.proevan.spotifystreamer.view.fragment;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +15,6 @@ import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.di.conponent.PlayerPresenterComponent;
 import com.proevan.spotifystreamer.model.TrackItem;
 import com.proevan.spotifystreamer.presenter.PlayerPresenter;
-import com.proevan.spotifystreamer.presenter.SearchPresenter;
 import com.proevan.spotifystreamer.view.PlayerView;
 import com.squareup.picasso.Picasso;
 
@@ -30,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class PlayerFragment extends Fragment implements PlayerView {
+public class PlayerFragment extends DialogFragment implements PlayerView {
 
     private static final String ARG_PARAM_TRACK_ITEMS = "ARG_PARAM_TRACK_ITEMS";
     private static final String ARG_PARAM_PLAY_INDEX = "ARG_PARAM_PLAY_INDEX";

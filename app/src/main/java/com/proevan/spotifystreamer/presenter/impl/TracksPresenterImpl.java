@@ -70,6 +70,6 @@ public class TracksPresenterImpl implements TracksPresenter {
 
     @Override
     public void onTrackItemClick(TrackListAdapter adapter, int index) {
-        mTracksView.openPlayerPage(mTracks, index);
+        mTracksView.openPlayerView(mTracks, index);
     }
 }

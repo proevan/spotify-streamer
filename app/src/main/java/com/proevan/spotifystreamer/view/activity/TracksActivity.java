@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
+import kaaes.spotify.webapi.android.models.Tracks;
+
 public class TracksActivity extends BaseActivity implements TracksFragment.TracksFragmentEventListener {
 
     private static final String INTENT_PARAM_ARTIST_ID = "INTENT_PARAM_USER_ID";
@@ -95,7 +97,8 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void openPlayerView(Tracks tracks, int selectIndex) {
+        Intent LaunchIntent = PlayerActivity.getCallingIntent(this, tracks, selectIndex);
+        startActivity(LaunchIntent);
     }
 }

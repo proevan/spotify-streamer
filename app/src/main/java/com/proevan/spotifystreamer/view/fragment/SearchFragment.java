@@ -102,7 +102,7 @@ public class SearchFragment extends Fragment implements SearchView {
         try {
             mSearchFragmentEventListener = (SearchFragmentEventListener) activity;
         } catch (ClassCastException e) {
-            Logger.e("must implement OnFragmentInteractionListener", e);
+            throw new ClassCastException("must implement SearchFragmentEventListener");
         }
     }
 
@@ -123,8 +123,7 @@ public class SearchFragment extends Fragment implements SearchView {
 
     @Override
     public void openTracksPage(String artistId, String artistName) {
-        if (mSearchFragmentEventListener != null)
-            mSearchFragmentEventListener.openTracksPage(artistId, artistName);
+        mSearchFragmentEventListener.openTracksView(artistId, artistName);
     }
 
     @Override
@@ -154,7 +153,7 @@ public class SearchFragment extends Fragment implements SearchView {
     }
 
     public interface SearchFragmentEventListener {
-        public void openTracksPage(String artistId, String artistName);
+        public void openTracksView(String artistId, String artistName);
     }
 
 }

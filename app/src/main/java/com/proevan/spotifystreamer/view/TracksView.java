@@ -9,7 +9,7 @@ public interface TracksView {
 
     void setTrackItems(List<Track> tracks);
     void clearTrackItems();
-    void openPlayerPage(Tracks tracks, int selectIndex);
+    void openPlayerView(Tracks tracks, int selectIndex);
     void showMessage(String message);
     void showNoDataMessage();
     void hideNoDataMessage();

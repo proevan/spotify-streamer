@@ -2,7 +2,7 @@ package com.proevan.spotifystreamer.di;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.DialogFragment$DialogStyle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -35,7 +35,7 @@ public class FragmentTestContainerActivity extends FragmentActivity {
     }
 
 
-    public void showDialogFragment(DialogFragment dialog, String tag) {
+    public void showDialogFragment(DialogFragment$DialogStyle dialog, String tag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {

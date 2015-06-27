@@ -107,19 +107,13 @@ public class TracksFragment extends Fragment implements TracksView {
         mPresenter.onViewCreated(mArtistId);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mTracksFragmentEventListener != null)
-            mTracksFragmentEventListener.onFragmentInteraction(uri);
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mTracksFragmentEventListener = (TracksFragmentEventListener) activity;
         } catch (ClassCastException e) {
-            Logger.e("must implement OnFragmentInteractionListener", e);
+            throw new ClassCastException("must implement TracksFragmentEventListener");
         }
     }
 
@@ -141,9 +135,8 @@ public class TracksFragment extends Fragment implements TracksView {
     }
 
     @Override
-    public void openPlayerPage(Tracks tracks, int selectIndex) {
-        Intent LaunchIntent = PlayerActivity.getCallingIntent(getActivity(), tracks, selectIndex);
-        startActivity(LaunchIntent);
+    public void openPlayerView(Tracks tracks, int selectIndex) {
+        mTracksFragmentEventListener.openPlayerView(tracks, selectIndex);
     }
 
     @Override
@@ -173,7 +166,6 @@ public class TracksFragment extends Fragment implements TracksView {
     }
 
     public interface TracksFragmentEventListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void openPlayerView(Tracks tracks, int selectIndex);
     }
 }
