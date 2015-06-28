@@ -1,11 +1,9 @@
 package com.proevan.spotifystreamer.di.conponent;
 
 import com.proevan.spotifystreamer.di.module.TestPlayerPresenterModule;
-import com.proevan.spotifystreamer.di.module.TestSearchPresenterModule;
 import com.proevan.spotifystreamer.di.module.TestSpotifyServiceModule;
 import com.proevan.spotifystreamer.di.uitestcase.fragment.PlayerFragmentTestCase;
 import com.proevan.spotifystreamer.view.PlayerView;
-import com.proevan.spotifystreamer.view.SearchView;
 import com.proevan.spotifystreamer.view.fragment.PlayerFragment;
 
 import javax.inject.Singleton;

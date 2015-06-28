@@ -1,7 +1,5 @@
 package com.proevan.spotifystreamer.view.fragment;
 
-import android.support.test.espresso.action.ViewActions;
-
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.PlayerPresenterComponent;
@@ -10,11 +8,8 @@ import com.proevan.spotifystreamer.model.TrackItem;
 
 import java.util.List;
 
-import kaaes.spotify.webapi.android.models.Track;
-import kaaes.spotify.webapi.android.models.Tracks;
-
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;

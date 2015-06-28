@@ -6,7 +6,7 @@ import java.util.List;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 
-import static com.proevan.spotifystreamer.di.mock.MockTrack.*;
+import static com.proevan.spotifystreamer.di.mock.MockTrack.COLDPLAY_TOP_TRACKS;
 
 public class MockTracks {
 

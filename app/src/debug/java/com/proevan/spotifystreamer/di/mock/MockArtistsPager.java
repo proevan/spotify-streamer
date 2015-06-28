@@ -7,7 +7,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Pager;
 
-import static com.proevan.spotifystreamer.di.mock.MockArtist.*;
+import static com.proevan.spotifystreamer.di.mock.MockArtist.COLDPLAY_SEARCH_RESULTS;
 
 public class MockArtistsPager {
 
