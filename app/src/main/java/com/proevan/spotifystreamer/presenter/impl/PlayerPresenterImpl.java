@@ -78,6 +78,10 @@ public class PlayerPresenterImpl implements PlayerPresenter, MediaPlayer.OnPrepa
     }
 
     private void prepareMediaPlayer(String previewUrl) {
+        if (previewUrl == null) {
+            Logger.e("prepareMediaPlayer with null previewUrl");
+            return;
+        }
         mIsPrepareStarted = true;
         mIsPrepared = false;
         if (mMediaPlayer != null)

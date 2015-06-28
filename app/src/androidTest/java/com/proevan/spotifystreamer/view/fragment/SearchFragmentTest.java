@@ -1,19 +1,16 @@
 package com.proevan.spotifystreamer.view.fragment;
 
 import android.graphics.drawable.Drawable;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.SearchPresenterComponent;
-import com.proevan.spotifystreamer.di.storyteller.SpotifyServiceStoryTeller;
 import com.proevan.spotifystreamer.di.uitestcase.fragment.SearchFragmentTestCase;
 import com.proevan.spotifystreamer.presenter.impl.SearchPresenterImpl;
 
 import org.hamcrest.Matcher;
-import org.mockito.Mockito;
 
 import kaaes.spotify.webapi.android.models.Artist;
 
@@ -37,7 +34,6 @@ import static com.proevan.spotifystreamer.di.mock.MockArtistsPager.COLDPLAY_SEAR
 import static com.proevan.spotifystreamer.di.mock.MockArtistsPager.EMPTY_SEARCH_RESULT_PAGER;
 import static com.proevan.spotifystreamer.macher.CustomMatcher.isImageTheSame;
 import static org.hamcrest.Matchers.allOf;
-import static org.mockito.Mockito.*;
 
 public class SearchFragmentTest extends SearchFragmentTestCase {
 
@@ -49,7 +45,7 @@ public class SearchFragmentTest extends SearchFragmentTestCase {
 
     private void initTestView() throws Exception {
         SpotifyStreamerApplication.setIsTestMode(true);
-        getActivity().addFragment(SearchFragment.newInstance(), SearchFragment.class.getSimpleName());
+        getActivity().addFragment(SearchFragment.newInstance(false), SearchFragment.class.getSimpleName());
         getInstrumentation().waitForIdleSync();
     }
 
@@ -140,8 +136,7 @@ public class SearchFragmentTest extends SearchFragmentTestCase {
                 .perform(actionOnItemAtPosition(0, click()));
 
         // assert
-        onView(withText(R.string.title_activity_tracks))
-                .check(matches(isDisplayed()));
+        assertTrue(getActivity().isMethodInvokedOpenTracksView());
     }
     // test case block end
 

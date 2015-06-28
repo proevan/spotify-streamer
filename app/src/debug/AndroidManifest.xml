@@ -4,8 +4,7 @@
 
     <application>
         <activity
-            android:name=".di.FragmentTestContainerActivity"
-            android:screenOrientation="portrait"/>
+            android:name=".di.FragmentTestContainerActivity"/>
     </application>
 
 </manifest>

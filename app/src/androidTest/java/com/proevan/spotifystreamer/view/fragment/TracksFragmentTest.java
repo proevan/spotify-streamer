@@ -1,6 +1,5 @@
 package com.proevan.spotifystreamer.view.fragment;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -8,16 +7,16 @@ import android.view.View;
 import com.proevan.spotifystreamer.R;
 import com.proevan.spotifystreamer.SpotifyStreamerApplication;
 import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
-import com.proevan.spotifystreamer.di.storyteller.SpotifyServiceStoryTeller;
 import com.proevan.spotifystreamer.di.uitestcase.fragment.TracksFragmentTestCase;
-import com.proevan.spotifystreamer.view.activity.TracksActivity;
 
 import org.hamcrest.Matcher;
 
 import kaaes.spotify.webapi.android.models.Track;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -25,8 +24,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.proevan.spotifystreamer.di.mock.MockArtistsPager.COLDPLAY_SEARCH_RESULT_PAGER;
 import static com.proevan.spotifystreamer.di.mock.MockTrack.COLDPLAY_TOP_TRACKS;
 import static com.proevan.spotifystreamer.di.mock.MockTrack.COLDPLAY_TOP_TRACK_2;
+import static com.proevan.spotifystreamer.di.mock.MockTracks.COLDPLAY_TOP_TRACKS_OBJECT;
+import static com.proevan.spotifystreamer.di.mock.MockTracks.EMPTY_TOP_TRACKS_OBJECT;
 import static com.proevan.spotifystreamer.di.module.TestSpotifyServiceModule.NO_RESULT_STRING_PARAM;
 import static com.proevan.spotifystreamer.macher.CustomMatcher.isImageTheSame;
 import static org.hamcrest.Matchers.allOf;
@@ -34,46 +36,22 @@ import static org.hamcrest.Matchers.allOf;
 public class TracksFragmentTest extends TracksFragmentTestCase {
 
     private static final String FAKE_ARTIST_ID = "fakeColdplayId";
-    private static final String FAKE_ARTIST_NAME = "Coldplay";
 
-    private SpotifyServiceStoryTeller mSpotifyServiceStoryTeller;
-
-    private void setUp(String artistId, String artistName) throws Exception {
-        initTestView(artistId, artistName);
+    private void setUp(String artistId) throws Exception {
+        initTestView(artistId);
         TracksPresenterComponent.Initializer.getInstance().inject(this);
-        mSpotifyServiceStoryTeller = new SpotifyServiceStoryTeller(mMockSpotifyService);
     }
 
-    private void initTestView(String artistId, String artistName) throws Exception {
+    private void initTestView(String artistId) throws Exception {
         SpotifyStreamerApplication.setIsTestMode(true);
-        setActivityIntent(createTargetIntent(artistId, artistName));
-        getActivity();
-    }
-
-    private Intent createTargetIntent(String artistId, String artistName) {
-        Intent intentLaunchActivity =
-                TracksActivity.getCallingIntent(getInstrumentation().getTargetContext(), artistId, artistName);
-
-        return intentLaunchActivity;
+        getActivity().addFragment(TracksFragment.newInstance(artistId), TracksFragment.class.getSimpleName());
+        getInstrumentation().waitForIdleSync();
     }
 
     // test case block start
-    public void testLayoutActionBar() throws Exception {
-        // arrange
-        setUp(FAKE_ARTIST_ID, FAKE_ARTIST_NAME);
-
-        // act
-
-        // assert
-        onView(withText(getActivity().getString(R.string.title_activity_tracks)))
-                .check(matches(isDisplayed()));
-        onView(withText("Coldplay"))
-                .check(matches(isDisplayed()));
-    }
-
     public void testNoResult() throws Exception {
         // arrange
-        setUp(NO_RESULT_STRING_PARAM, FAKE_ARTIST_NAME);
+        setUp(NO_RESULT_STRING_PARAM);
 
         // act
 
@@ -84,7 +62,7 @@ public class TracksFragmentTest extends TracksFragmentTestCase {
 
     public void testTrackListLayout() throws Exception {
         // arrange
-        setUp(FAKE_ARTIST_ID, FAKE_ARTIST_NAME);
+        setUp(FAKE_ARTIST_ID);
 
         // act
 
@@ -96,7 +74,7 @@ public class TracksFragmentTest extends TracksFragmentTestCase {
 
     public void testTrackItemImagePlaceHolder() throws Exception {
         // arrange
-        setUp(FAKE_ARTIST_ID, FAKE_ARTIST_NAME);
+        setUp(FAKE_ARTIST_ID);
 
         // act
 
@@ -104,6 +82,18 @@ public class TracksFragmentTest extends TracksFragmentTestCase {
         Drawable placeholderDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.spotify_placeholder);
         onView(allOf(withId(R.id.image), withParent(withTrackAndAlbumNameItem(COLDPLAY_TOP_TRACK_2.name, COLDPLAY_TOP_TRACK_2.album.name))))
                 .check(matches(isImageTheSame(placeholderDrawable)));
+    }
+
+    public void testTrackItemClick() throws Exception {
+        // arrange
+        setUp(FAKE_ARTIST_ID);
+
+        // act
+        onView(withId(R.id.recycler_view))
+                .perform(actionOnItemAtPosition(0, click()));
+
+        // assert
+        assertTrue(getActivity().isMethodInvokedOpenPlayerView());
     }
     // test case block end
 

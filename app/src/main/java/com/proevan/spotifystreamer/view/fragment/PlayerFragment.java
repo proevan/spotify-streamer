@@ -166,7 +166,7 @@ public class PlayerFragment extends FixedDialogFragment implements PlayerView {
             mDuration.setText(durationToString(trackItem.getDurationInMillisecond().intValue()));
     }
 
-    private String durationToString(int duration) {
+    static String durationToString(int duration) {
         return String.format("%d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes((long) duration),
                 TimeUnit.MILLISECONDS.toSeconds((long) duration % MINUTE_IN_MILLISECOND)

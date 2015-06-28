@@ -31,8 +31,7 @@ public class TestSpotifyServiceModule {
 
     public TestSpotifyServiceModule() {
         mMockSpotifyService = mock(SpotifyService.class);
-        mSpotifyServiceStoryTeller =
-                new SpotifyServiceStoryTeller(mMockSpotifyService);
+        mSpotifyServiceStoryTeller = new SpotifyServiceStoryTeller(mMockSpotifyService);
         mSpotifyServiceStoryTeller.stubGetArtistTopTrackSuccess(COLDPLAY_TOP_TRACKS_OBJECT);
         mSpotifyServiceStoryTeller.stubGetArtistTopTrackSuccess(NO_RESULT_STRING_PARAM, EMPTY_TOP_TRACKS_OBJECT);
     }

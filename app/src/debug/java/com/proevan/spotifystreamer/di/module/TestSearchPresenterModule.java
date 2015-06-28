@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 @Module
 public class TestSearchPresenterModule {
 
-    public SearchView mSearchView;
+    private SearchView mSearchView;
 
     public TestSearchPresenterModule(SearchView searchView) {
         mSearchView = searchView;
