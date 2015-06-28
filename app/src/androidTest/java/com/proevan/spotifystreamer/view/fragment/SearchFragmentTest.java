@@ -45,7 +45,7 @@ public class SearchFragmentTest extends SearchFragmentTestCase {
 
     private void initTestView() throws Exception {
         SpotifyStreamerApplication.setIsTestMode(true);
-        getActivity().addFragment(SearchFragment.newInstance(false), SearchFragment.class.getSimpleName());
+        getActivity().addFragment(SearchFragment.newInstance(false), SearchFragment.TAG);
         getInstrumentation().waitForIdleSync();
     }
 

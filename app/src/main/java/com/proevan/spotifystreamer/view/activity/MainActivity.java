@@ -26,10 +26,10 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null)
-            addFragment(R.id.pane_1, SearchFragment.newInstance(is2PaneMode()));
+            addFragment(R.id.pane_1, SearchFragment.newInstance(is2PaneMode()), SearchFragment.TAG);
     }
 
-    private boolean is2PaneMode() {
+    boolean is2PaneMode() {
         if (findViewById(R.id.pane_2) != null)
             return true;
         else
@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
 
     private void attachTracksFragmentToPane2AndAddSubTitle(String artistId, String artistName) {
         setSubtitle(artistName);
-        replaceFragment(R.id.pane_2, TracksFragment.newInstance(artistId));
+        replaceFragment(R.id.pane_2, TracksFragment.newInstance(artistId), TracksFragment.TAG);
     }
 
     private void setSubtitle(String subtitle) {
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity implements SearchFragment.SearchF
     public void openPlayerView(Tracks tracks, int selectIndex) {
         showDialog(
                 PlayerFragment.newInstance(TrackItem.convertFromTracks(tracks.tracks), selectIndex),
-                PlayerFragment.class.getSimpleName()
+                PlayerFragment.TAG
         );
     }
 

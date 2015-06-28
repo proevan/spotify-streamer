@@ -32,6 +32,7 @@ import kaaes.spotify.webapi.android.models.Tracks;
 
 public class TracksFragment extends Fragment implements TracksView {
 
+    public static final String TAG = "TracksFragment";
     private static final String ARG_PARAM_ARTIST_ID = "ARG_PARAM_ARTIST_ID";
 
     private String mArtistId;

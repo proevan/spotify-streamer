@@ -41,7 +41,7 @@ public class TracksFragmentTest extends TracksFragmentTestCase {
 
     private void initTestView(String artistId) throws Exception {
         SpotifyStreamerApplication.setIsTestMode(true);
-        getActivity().addFragment(TracksFragment.newInstance(artistId), TracksFragment.class.getSimpleName());
+        getActivity().addFragment(TracksFragment.newInstance(artistId), TracksFragment.TAG);
         getInstrumentation().waitForIdleSync();
     }
 

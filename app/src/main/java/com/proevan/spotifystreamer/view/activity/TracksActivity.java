@@ -41,7 +41,7 @@ public class TracksActivity extends BaseActivity implements TracksFragment.Track
 
         initActionBar();
         if (savedInstanceState == null)
-            addFragment(R.id.layout_container, TracksFragment.newInstance(mArtistId));
+            addFragment(R.id.layout_container, TracksFragment.newInstance(mArtistId), TracksFragment.TAG);
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {

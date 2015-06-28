@@ -43,7 +43,7 @@ public class PlayerActivity extends BaseActivity {
         setContentView(R.layout.activity_player);
 
         if (savedInstanceState == null)
-            addFragment(R.id.layout_container, PlayerFragment.newInstance(mTrackItems, mPlayIndex));
+            addFragment(R.id.layout_container, PlayerFragment.newInstance(mTrackItems, mPlayIndex), PlayerFragment.TAG);
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {

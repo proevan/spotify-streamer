@@ -31,6 +31,7 @@ import butterknife.OnClick;
 
 public class PlayerFragment extends FixedDialogFragment implements PlayerView {
 
+    public static final String TAG = "PlayerFragment";
     private static final String ARG_PARAM_TRACK_ITEMS = "ARG_PARAM_TRACK_ITEMS";
     private static final String ARG_PARAM_PLAY_INDEX = "ARG_PARAM_PLAY_INDEX";
     private static final int MINUTE_IN_MILLISECOND = 60 * 1000;

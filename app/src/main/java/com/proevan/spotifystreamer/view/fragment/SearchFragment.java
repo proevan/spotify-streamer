@@ -34,6 +34,7 @@ import static butterknife.OnTextChanged.Callback.AFTER_TEXT_CHANGED;
 
 public class SearchFragment extends Fragment implements SearchView {
 
+    public static final String TAG = "SearchFragment";
     private static final String ARG_PARAM_IS_CHOICE_MODE = "ARG_PARAM_IS_CHOICE_MODE";
 
     private ArtistListAdapter mAdapter;
