@@ -1,4 +1,4 @@
-package com.proevan.spotifystreamer.util;
+package com.proevan.spotifystreamer.macher;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;

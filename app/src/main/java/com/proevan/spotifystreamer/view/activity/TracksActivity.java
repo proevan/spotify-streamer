@@ -1,85 +1,78 @@
 package com.proevan.spotifystreamer.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.orhanobut.logger.Logger;
 import com.proevan.spotifystreamer.R;
-import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
-import com.proevan.spotifystreamer.presenter.TracksPresenter;
-import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
-import com.proevan.spotifystreamer.view.TracksPageView;
+import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
-import java.util.List;
+import kaaes.spotify.webapi.android.models.Tracks;
 
-import javax.inject.Inject;
+public class TracksActivity extends BaseActivity implements TracksFragment.TracksFragmentEventListener {
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import kaaes.spotify.webapi.android.models.Track;
+    private static final String INTENT_PARAM_ARTIST_ID = "INTENT_PARAM_USER_ID";
+    private static final String INTENT_PARAM_ARTIST_NAME = "INTENT_PARAM_USER_NAME";
+    private static final String INSTANCE_STATE_PARAM_ARTIST_ID = "INSTANCE_STATE_PARAM_ARTIST_ID";
+    private static final String INSTANCE_STATE_PARAM_ARTIST_NAME = "INSTANCE_STATE_PARAM_ARTIST_NAME";
 
-public class TracksActivity extends AppCompatActivity implements TracksPageView {
+    public static Intent getCallingIntent(Context context, String artistId, String artistName) {
+        Intent intent = new Intent(context, TracksActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(INTENT_PARAM_ARTIST_ID, artistId);
+        bundle.putString(INTENT_PARAM_ARTIST_NAME, artistName);
+        intent.putExtras(bundle);
 
-    public enum INTENT_BUNDLE_KEY {
-        ARTIST_ID, ARTIST_NAME
+        return intent;
     }
 
-    private TrackListAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private boolean mIsTestMode = false; // workaround for testing, prevent UI test stuck problem
-
-    @Inject
-    TracksPresenter mPresenter;
-
-    @InjectView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-
-    @InjectView(R.id.no_result_text)
-    TextView mNoResultTextView;
-
-    @InjectView(R.id.progress_view)
-    ProgressBarCircularIndeterminate mProgressView;
+    private String mArtistId;
+    private String mArtistName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TracksPresenterComponent.Initializer.init(this).inject(this);
+        initializeActivity(savedInstanceState);
         setContentView(R.layout.activity_tracks);
-        ButterKnife.inject(this);
 
         initActionBar();
-        initRecyclerView();
-        mPresenter.onCreateView(getIntent().getExtras());
+        if (savedInstanceState == null)
+            addFragment(R.id.layout_container, TracksFragment.newInstance(mArtistId), TracksFragment.TAG);
+    }
+
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        if (outState != null) {
+            outState.putString(INSTANCE_STATE_PARAM_ARTIST_ID, mArtistId);
+            outState.putString(INSTANCE_STATE_PARAM_ARTIST_NAME, mArtistName);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    private void initializeActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                mArtistId = extras.getString(INTENT_PARAM_ARTIST_ID, "");
+                mArtistName = extras.getString(INTENT_PARAM_ARTIST_NAME, "");
+            }
+        } else {
+            mArtistId = savedInstanceState.getString(INSTANCE_STATE_PARAM_ARTIST_ID);
+            mArtistName = savedInstanceState.getString(INSTANCE_STATE_PARAM_ARTIST_NAME);
+        }
     }
 
     private void initActionBar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSubtitle(mArtistName);
     }
 
-    private void initRecyclerView() {
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new TrackListAdapter();
-        mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long id) {
-                Logger.v("mAdapter onItemClick: " + index);
-                mPresenter.onTrackItemClick(mAdapter, index);
-            }
-        });
-        mRecyclerView.setAdapter(mAdapter);
+    private void setSubtitle(String subtitle) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setSubtitle(subtitle);
     }
 
     @Override
@@ -91,76 +84,20 @@ public class TracksActivity extends AppCompatActivity implements TracksPageView 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == android.R.id.home) {
-            mPresenter.onUpButtonClick();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void setSubtitle(String subtitle) {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setSubtitle(subtitle);
-    }
-
-    @Override
-    public void setTrackItems(List<Track> tracks) {
-        mAdapter.removeAll();
-        mAdapter.addAll(tracks);
-    }
-
-    @Override
-    public void clearTrackItems() {
-        mAdapter.removeAll();
-    }
-
-    @Override
-    public void openPlayerPage(Bundle bundle) {
-
-    }
-
-    @Override
-    public void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void closePage() {
-        finish();
-    }
-
-    @Override
-    public void showNoDataMessage() {
-        mNoResultTextView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideNoDataMessage() {
-        mNoResultTextView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showLoadingView() {
-        if (!mIsTestMode)
-            mProgressView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoadingView() {
-        mProgressView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void setTestMode(boolean isTestMode) {
-        mIsTestMode = isTestMode;
+    public void openPlayerView(Tracks tracks, int selectIndex) {
+        Intent LaunchIntent = PlayerActivity.getCallingIntent(this, tracks, selectIndex);
+        startActivity(LaunchIntent);
     }
 }

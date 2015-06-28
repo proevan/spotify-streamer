@@ -1,52 +1,53 @@
 package com.proevan.spotifystreamer.view.activity;
 
 
-import android.graphics.drawable.Drawable;
 import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.v4.content.ContextCompat;
-import android.view.View;
+import android.test.ActivityInstrumentationTestCase2;
 
 import com.proevan.spotifystreamer.R;
-import com.proevan.spotifystreamer.di.conponent.MainPresenterComponent;
-import com.proevan.spotifystreamer.di.uitestcase.activity.MainActivityTestCase;
-import com.proevan.spotifystreamer.presenter.impl.MainPresenterImpl;
-
-import org.hamcrest.Matcher;
+import com.proevan.spotifystreamer.SpotifyStreamerApplication;
+import com.proevan.spotifystreamer.view.fragment.PlayerFragment;
+import com.proevan.spotifystreamer.view.fragment.SearchFragment;
+import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.clearText;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.proevan.spotifystreamer.di.module.TestMainPresenterModule.FAKE_NO_IMAGE_ARTIST_NAME;
-import static com.proevan.spotifystreamer.di.module.TestMainPresenterModule.FIRST_FAKE_ARTIST_NAME;
-import static com.proevan.spotifystreamer.di.module.TestMainPresenterModule.LAST_FAKE_ARTIST_NAME;
-import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
-import static org.hamcrest.Matchers.allOf;
+import static com.proevan.spotifystreamer.di.mock.MockTrack.COLDPLAY_TOP_TRACKS;
+import static com.proevan.spotifystreamer.di.mock.MockTracks.COLDPLAY_TOP_TRACKS_OBJECT;
 
-public class MainActivityTest extends MainActivityTestCase {
+public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    private static final String TEST_SEARCH_TEXT = "coldplay";
-    private static final String TEST_SEARCH_TEXT_NO_RESULT = "no result";
+    private static final String FAKE_ARTIST_ID = "fakeColdplayId";
+    private static final String TEST_ARTIST_NAME = "Coldplay";
 
-    public void setUp() throws Exception {
-        super.setUp();
+    public MainActivityTest() {
+        super(MainActivity.class);
+    }
+
+    private void initTestView() throws Exception {
+        SpotifyStreamerApplication.setIsTestMode(true);
         getActivity();
-        MainPresenterComponent.Initializer.instance.inject(this);
-        getActivity().setTestMode(true);
     }
 
     // test case block start
-    public void testLayoutActionBarTitle() throws Exception {
+    public void testAttachedFragments() throws Exception {
         // arrange
+        initTestView();
+
+        // act
+
+        // assert
+        assertNotNull(getActivity().getSupportFragmentManager().findFragmentByTag(SearchFragment.TAG));
+    }
+
+    public void testLayoutActionBar() throws Exception {
+        // arrange
+        initTestView();
 
         // act
 
@@ -55,144 +56,52 @@ public class MainActivityTest extends MainActivityTestCase {
                 .check(matches(isDisplayed()));
     }
 
-    public void testLayoutSearchBar() throws Exception {
+    public void testOpenTracksView() throws Exception {
         // arrange
+        initTestView();
+        boolean is2PaneMode = getActivity().is2PaneMode();
 
         // act
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().openTracksView(FAKE_ARTIST_ID, TEST_ARTIST_NAME);
+            }
+        });
+        getInstrumentation().waitForIdleSync();
 
         // assert
-        onView(withId(R.id.search_bar))
-                .check(matches(isDisplayed()));
+        if (is2PaneMode) {
+            onView(withId(R.id.pane_2))
+                    .check(matches(isDisplayed()));
+            assertNotNull(getActivity().getSupportFragmentManager().findFragmentByTag(TracksFragment.TAG));
+        } else {
+            onView(withId(R.id.pane_2))
+                    .check(doesNotExist());
+            onView(withText(COLDPLAY_TOP_TRACKS.get(0).name))
+                    .check(matches(isDisplayed()));
+            pressBack();
+            onView(withId(R.id.pane_1))
+                    .check(matches(isDisplayed()));
+        }
     }
 
-    public void testClearResultDuringTyping() throws Exception {
+    public void testOpenPlayerView() throws Exception {
         // arrange
+        initTestView();
 
         // act
-        onView(withId(R.id.search_bar))
-                .perform(typeText(TEST_SEARCH_TEXT));
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().openPlayerView(COLDPLAY_TOP_TRACKS_OBJECT, 0);
+            }
+        });
+        getInstrumentation().waitForIdleSync();
 
         // assert
-        onView(allOf(withText(FIRST_FAKE_ARTIST_NAME), withId(R.id.name)))
-                .check(doesNotExist());
-    }
-
-    public void testSearch() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-
-        // assert
-        onView(allOf(withText(FIRST_FAKE_ARTIST_NAME), withId(R.id.name)))
-                .check(matches(isDisplayed()));
-    }
-
-    public void testSearchThenClearText() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-        onView(withId(R.id.search_bar))
-                .perform(clearText());
-
-        // assert
-        onView(allOf(withText(FIRST_FAKE_ARTIST_NAME), withId(R.id.name)))
-                .check(doesNotExist());
-    }
-
-    public void testNoResult() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT_NO_RESULT);
-
-        // assert
-        onView(withText(R.string.no_result))
-                .check(matches(isDisplayed()));
-    }
-
-    public void testFirstArtistItem() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-
-        // assert
-        Matcher<View> firstFakeItem = withChild(withText(FIRST_FAKE_ARTIST_NAME));
-        onView(firstFakeItem)
-                .check(matches(isDisplayed()));
-    }
-
-    public void testLastArtistItem() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-        Matcher<View> lastFakeItem = withChild(withText(LAST_FAKE_ARTIST_NAME));
-        onView(withId(R.id.recycler_view))
-                .perform(scrollTo(lastFakeItem));
-        onView(lastFakeItem)
-                .perform(click());
-
-        // assert
-        onView(lastFakeItem)
-                .check(matches(isDisplayed()));
-    }
-
-    public void testArtistItemImagePlaceHolder() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-
-        // assert
-        Drawable placeholderDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.spotify_placeholder);
-        onView(allOf(hasSibling(withText(FAKE_NO_IMAGE_ARTIST_NAME)), withId(R.id.image)))
-                .check(matches(isImageTheSame(placeholderDrawable)));
-    }
-
-    public void testFirstArtistItemClick() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-        onView(withId(R.id.recycler_view))
-                .perform(actionOnItemAtPosition(0, click()));
-
-        // assert
-        onView(withText(getActivity().getString(R.string.title_activity_tracks)))
-                .check(matches(isDisplayed()));
-        onView(withText(FIRST_FAKE_ARTIST_NAME))
-                .check(matches(isDisplayed()));
-    }
-
-    public void testLastArtistItemClick() throws Exception {
-        // arrange
-
-        // act
-        searchAndWaitForResult(TEST_SEARCH_TEXT);
-        Matcher<View> lastFakeItem = withChild(withText(LAST_FAKE_ARTIST_NAME));
-        onView(withId(R.id.recycler_view))
-                .perform(scrollTo(lastFakeItem));
-        onView(lastFakeItem)
-                .perform(click());
-
-        // assert
-        onView(withText(getActivity().getString(R.string.title_activity_tracks)))
-                .check(matches(isDisplayed()));
-        onView(withText(LAST_FAKE_ARTIST_NAME))
-                .check(matches(isDisplayed()));
+        assertTrue(((PlayerFragment) getActivity().getSupportFragmentManager().findFragmentByTag(PlayerFragment.TAG))
+                .getDialog().isShowing());
     }
     // test case block end
-
-    private void searchAndWaitForResult(String text) throws InterruptedException {
-        onView(withId(R.id.search_bar))
-                .perform(typeText(text));
-        waitForSearchTypingDelay();
-    }
-
-    private void waitForSearchTypingDelay() throws InterruptedException {
-        Thread.sleep(MainPresenterImpl.SEARCH_TYPING_DELAY);
-    }
 }

@@ -1,145 +1,89 @@
 package com.proevan.spotifystreamer.view.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.view.View;
+import android.test.ActivityInstrumentationTestCase2;
 
 import com.proevan.spotifystreamer.R;
-import com.proevan.spotifystreamer.di.conponent.TracksPresenterComponent;
-import com.proevan.spotifystreamer.di.uitestcase.activity.TracksActivityTestCase;
-
-import org.hamcrest.Matcher;
+import com.proevan.spotifystreamer.SpotifyStreamerApplication;
+import com.proevan.spotifystreamer.view.fragment.TracksFragment;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.FAKE_NO_IMAGE_ALBUM_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.FAKE_NO_IMAGE_TRACK_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.FIRST_FAKE_ALBUM_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.FIRST_FAKE_TRACK_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.LAST_FAKE_ALBUM_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.LAST_FAKE_TRACK_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.TEST_ARTIST_ID;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.TEST_ARTIST_ID_NO_RESULT;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.TEST_ARTIST_NAME;
-import static com.proevan.spotifystreamer.di.module.TestTracksPresenterModule.TEST_ARTIST_NAME_NO_RESULT;
-import static com.proevan.spotifystreamer.util.CustomMatcher.isImageTheSame;
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_ID;
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_NAME;
-import static org.hamcrest.Matchers.allOf;
+import static com.proevan.spotifystreamer.di.mock.MockTrack.COLDPLAY_TOP_TRACKS;
+import static com.proevan.spotifystreamer.di.mock.MockTracks.COLDPLAY_TOP_TRACKS_OBJECT;
 
-public class TracksActivityTest extends TracksActivityTestCase {
+public class TracksActivityTest extends ActivityInstrumentationTestCase2<TracksActivity> {
 
-    private void setUpWithFakeTrackResult() {
-        setActivityIntent(generateFakeIntentWithBundle());
+    private static final String FAKE_ARTIST_ID = "fakeColdplayId";
+    private static final String TEST_ARTIST_NAME = "Coldplay";
+
+    public TracksActivityTest() {
+        super(TracksActivity.class);
+    }
+
+    private void initTestView(String artistId, String artistName) throws Exception {
+        SpotifyStreamerApplication.setIsTestMode(true);
+        setActivityIntent(createLaunchIntent(artistId, artistName));
         getActivity();
-        TracksPresenterComponent.Initializer.instance.inject(this);
-        getActivity().setTestMode(true);
     }
 
-    private void setUpWithNoTrackResult() {
-        setActivityIntent(generateFakeIntentWithBundleNoResult());
-        getActivity();
-        TracksPresenterComponent.Initializer.instance.inject(this);
-        getActivity().setTestMode(true);
-    }
+    private Intent createLaunchIntent(String artistId, String artistName) {
+        Intent intentLaunch = TracksActivity.getCallingIntent(
+                getInstrumentation().getTargetContext(),
+                artistId,
+                artistName
+        );
 
-    private Intent generateFakeIntentWithBundle() {
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString(ARTIST_ID.name(), TEST_ARTIST_ID);
-        bundle.putString(ARTIST_NAME.name(), TEST_ARTIST_NAME);
-        intent.putExtras(bundle);
-
-        return intent;
-    }
-
-    private Intent generateFakeIntentWithBundleNoResult() {
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString(ARTIST_ID.name(), TEST_ARTIST_ID_NO_RESULT);
-        bundle.putString(ARTIST_NAME.name(), TEST_ARTIST_NAME_NO_RESULT);
-        intent.putExtras(bundle);
-
-        return intent;
+        return intentLaunch;
     }
 
     // test case block start
+    public void testAttachedFragments() throws Exception {
+        // arrange
+        initTestView(FAKE_ARTIST_ID, TEST_ARTIST_NAME);
+
+        // act
+
+        // assert
+        assertNotNull(getActivity().getSupportFragmentManager().findFragmentByTag(TracksFragment.TAG));
+    }
+
     public void testLayoutActionBar() throws Exception {
         // arrange
-        setUpWithFakeTrackResult();
+        initTestView(FAKE_ARTIST_ID, TEST_ARTIST_NAME);
 
         // act
 
         // assert
-        onView(withText(getActivity().getString(R.string.title_activity_tracks)))
+        onView(withText(R.string.title_activity_tracks))
                 .check(matches(isDisplayed()));
-        onView(withText(TEST_ARTIST_NAME))
-                .check(matches(isDisplayed()));
-    }
-
-    public void testNoResult() throws Exception {
-        // arrange
-        setUpWithNoTrackResult();
-
-        // act
-
-        // assert
-        onView(withText(R.string.no_result))
+        onView(withText("Coldplay"))
                 .check(matches(isDisplayed()));
     }
 
-    public void testFirstTrackItem() throws Exception {
+    public void testOpenPlayerView() throws Exception {
         // arrange
-        setUpWithFakeTrackResult();
+        initTestView(FAKE_ARTIST_ID, TEST_ARTIST_NAME);
 
         // act
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().openPlayerView(COLDPLAY_TOP_TRACKS_OBJECT, 0);
+            }
+        });
+        getInstrumentation().waitForIdleSync();
 
         // assert
-        Matcher<View> firstFakeItem = generateTrackItemMatcher(FIRST_FAKE_TRACK_NAME, FIRST_FAKE_ALBUM_NAME);
-        onView(firstFakeItem)
+        onView(withId(R.id.seekbar))
                 .check(matches(isDisplayed()));
-    }
-
-    public void testLastTrackItem() throws Exception {
-        // arrange
-        setUpWithFakeTrackResult();
-
-        // act
-        Matcher<View> lastFakeItem  = generateTrackItemMatcher(LAST_FAKE_TRACK_NAME, LAST_FAKE_ALBUM_NAME);
-        onView(withId(R.id.recycler_view))
-                .perform(scrollTo(lastFakeItem));
-        onView(lastFakeItem)
-                .perform(click());
-
-        // assert
-        onView(lastFakeItem)
+        pressBack();
+        onView(withText(COLDPLAY_TOP_TRACKS.get(0).name))
                 .check(matches(isDisplayed()));
-    }
-
-    public void testTrackItemImagePlaceHolder() throws Exception {
-        // arrange
-        setUpWithFakeTrackResult();
-
-        // act
-
-        // assert
-        Drawable placeholderDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.spotify_placeholder);
-        onView(allOf(withId(R.id.image), withParent(generateTrackItemMatcher(FAKE_NO_IMAGE_TRACK_NAME, FAKE_NO_IMAGE_ALBUM_NAME))))
-                .check(matches(isImageTheSame(placeholderDrawable)));
     }
     // test case block end
-
-    private Matcher<View> generateTrackItemMatcher(String trackName, String albumName) {
-        return withChild(withChild(allOf(withText(trackName), hasSibling(withText(albumName)))));
-    }
 }

@@ -1,12 +1,10 @@
 package com.proevan.spotifystreamer.presenter.impl;
 
-import android.os.Bundle;
-
 import com.orhanobut.logger.Logger;
-import com.proevan.spotifystreamer.presenter.MainPresenter;
+import com.proevan.spotifystreamer.presenter.SearchPresenter;
 import com.proevan.spotifystreamer.presenter.adapter.ArtistListAdapter;
 import com.proevan.spotifystreamer.util.DelayActionFilter;
-import com.proevan.spotifystreamer.view.MainPageView;
+import com.proevan.spotifystreamer.view.SearchView;
 
 import javax.inject.Inject;
 
@@ -17,27 +15,24 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.client.Response;
 
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_ID;
-import static com.proevan.spotifystreamer.view.activity.TracksActivity.INTENT_BUNDLE_KEY.ARTIST_NAME;
-
-public class MainPresenterImpl implements MainPresenter {
+public class SearchPresenterImpl implements SearchPresenter {
 
     public static final int SEARCH_TYPING_DELAY = 500;
-    private MainPageView mMainPageView;
+    private SearchView mSearchView;
     private SpotifyService mSpotifyService;
     private DelayActionFilter mDelayActionFilter = new DelayActionFilter(SEARCH_TYPING_DELAY);
 
     @Inject
-    public MainPresenterImpl(MainPageView mainPageView, SpotifyService spotifyService) {
-        mMainPageView = mainPageView;
+    public SearchPresenterImpl(SearchView searchView, SpotifyService spotifyService) {
+        mSearchView = searchView;
         mSpotifyService = spotifyService;
     }
 
     @Override
     public void onSearchTextChange(final CharSequence text) {
-        mMainPageView.hideNoDataMessage();
-        mMainPageView.showLoadingView();
-        mMainPageView.clearSearchResult();
+        mSearchView.hideNoDataMessage();
+        mSearchView.showLoadingView();
+        mSearchView.clearSearchResult();
         mDelayActionFilter.prepareToDoActionWithDelay(new DelayActionFilter.Callback() {
             @Override
             public void doAction() {
@@ -52,32 +47,29 @@ public class MainPresenterImpl implements MainPresenter {
                 @Override
                 public void success(ArtistsPager artistsPager, Response response) {
                     Logger.d("searchArtist success: " + name);
-                    mMainPageView.hideLoadingView();
-                    mMainPageView.setResultItems(artistsPager.artists.items);
+                    mSearchView.hideLoadingView();
+                    mSearchView.setResultItems(artistsPager.artists.items);
                     if (artistsPager.artists.items.size() == 0)
-                        mMainPageView.showNoDataMessage();
+                        mSearchView.showNoDataMessage();
                 }
 
                 @Override
                 public void failure(SpotifyError spotifyError) {
                     Logger.e("searchArtist failure: " + spotifyError.getMessage());
-                    mMainPageView.hideLoadingView();
-                    mMainPageView.showMessage(spotifyError.getLocalizedMessage());
-                    mMainPageView.showNoDataMessage();
+                    mSearchView.hideLoadingView();
+                    mSearchView.showMessage(spotifyError.getLocalizedMessage());
+                    mSearchView.showNoDataMessage();
                 }
             });
         } else {
-            mMainPageView.hideLoadingView();
-            mMainPageView.clearSearchResult();
+            mSearchView.hideLoadingView();
+            mSearchView.clearSearchResult();
         }
     }
 
     @Override
     public void onSearchResultItemClick(ArtistListAdapter adapter, int position) {
-        Bundle bundle = new Bundle();
         Artist artist = adapter.getItem(position);
-        bundle.putString(ARTIST_ID.name(), artist.id);
-        bundle.putString(ARTIST_NAME.name(), artist.name);
-        mMainPageView.openTracksPage(bundle);
+        mSearchView.openTracksPage(artist.id, artist.name);
     }
 }

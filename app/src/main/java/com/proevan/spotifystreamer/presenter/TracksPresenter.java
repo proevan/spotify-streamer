@@ -1,12 +1,10 @@
 package com.proevan.spotifystreamer.presenter;
 
-import android.os.Bundle;
-
 import com.proevan.spotifystreamer.presenter.adapter.TrackListAdapter;
 
 public interface TracksPresenter {
 
-    public void onCreateView(Bundle extras);
-    public void onUpButtonClick();
-    public void onTrackItemClick(TrackListAdapter adapter, int index);
+    void onViewCreated(String artistId);
+    void loadTracks(String artistId);
+    void onTrackItemClick(TrackListAdapter adapter, int index);
 }

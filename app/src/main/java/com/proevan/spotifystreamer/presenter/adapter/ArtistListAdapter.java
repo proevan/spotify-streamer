@@ -1,7 +1,6 @@
 package com.proevan.spotifystreamer.presenter.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +24,15 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
     private List<Artist> mItems;
     private AdapterView.OnItemClickListener mOnItemClickListener;
+    private boolean mIsChoiceMode = false;
+    private int mSelectedPosition;
 
     public ArtistListAdapter() {
         mItems = new ArrayList<>();
+    }
+
+    public void setChoiceMode(boolean isChoiceMode) {
+        mIsChoiceMode = isChoiceMode;
     }
 
     public Artist getItem(int position) {
@@ -35,6 +40,7 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     }
 
     public void removeAll() {
+        mSelectedPosition = -1;
         mItems.clear();
         notifyDataSetChanged();
     }
@@ -42,20 +48,6 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     public void addAll(List<Artist> items) {
         mItems.addAll(items);
         notifyDataSetChanged();
-    }
-
-    public void addItem(int position, Artist item) {
-        if (position > mItems.size()) return;
-
-        mItems.add(position, item);
-        notifyItemInserted(position);
-    }
-
-    public void removeItem(int position) {
-        if (position >= mItems.size()) return;
-
-        mItems.remove(position);
-        notifyItemRemoved(position);
     }
 
     @Override
@@ -71,6 +63,12 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Artist artist = mItems.get(position);
+        if (mIsChoiceMode) {
+            if (position == mSelectedPosition)
+                holder.setActivated(true);
+            else
+                holder.setActivated(false);
+        }
         holder.nameTextView.setText(artist.name);
         loadArtistFirstImage(holder.imageView, artist.images);
     }
@@ -108,6 +106,13 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     }
 
     private void onItemHolderClick(ViewHolder viewHolder) {
+        if (mIsChoiceMode) {
+            if (mSelectedPosition != -1) {
+                notifyItemChanged(mSelectedPosition);
+            }
+            viewHolder.setActivated(true);
+            mSelectedPosition = viewHolder.getAdapterPosition();
+        }
         if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(null, viewHolder.itemView,
                     viewHolder.getAdapterPosition(), viewHolder.getItemId());
@@ -124,10 +129,12 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         @InjectView(R.id.name)
         TextView nameTextView;
 
+        private View mItemView;
         private ArtistListAdapter mAdapter;
 
         public ViewHolder(View v, ArtistListAdapter adapter) {
             super(v);
+            mItemView = v;
             mAdapter = adapter;
             v.setOnClickListener(this);
             ButterKnife.inject(this, v);
@@ -136,6 +143,10 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         @Override
         public void onClick(View view) {
             mAdapter.onItemHolderClick(this);
+        }
+
+        public void setActivated(boolean isActivated) {
+            mItemView.setActivated(isActivated);
         }
     }
 }

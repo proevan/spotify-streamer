@@ -2,4 +2,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_tracks">Top 10 Tracks</string>
     <string name="no_result">No Result</string>
+    <string name="message_prepare_media_player_error">load failed</string>
 </resources>
